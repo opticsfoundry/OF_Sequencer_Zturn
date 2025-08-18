@@ -17,11 +17,11 @@ For Vitis, it's easier to use this specific path than trying to adjust the proje
 
 With Vitis 2023.1 (and not another Vitis version), open the folder 
 
-C:\OpticsFoundry\OpticsFoundry_Sequencer_Zturn\OpticsFoundry_Sequencer_Zturn_Vitis_2023.1
+C:\OpticsFoundry\OF_Sequencer_Zturn\OF_Sequencer_Zturn_Vitis_2023.1
 
 An empty workspace should appear. To import the project(s), select
 
-File -> Import -> Import projects from Git -> Existing local repository -> OpticsFoundry_Sequencer_Zturn -> Import existing Eclipse projects -> OpticsFoundry_Sequencer_Zturn_Vitis_2023.1 -> Finish
+File -> Import -> Import projects from Git -> Existing local repository -> OF_Sequencer_Zturn -> Import existing Eclipse projects -> OF_Sequencer_Zturn_Vitis_2023.1 -> Finish
 
 Right click "OpticsFoundry_Seq...App" (not "..App_system")
 
@@ -58,7 +58,7 @@ This code is based on the Vitis example "lwIP echo server". Most of the sequence
 
 To change the IP configuration (MAC address, DHCP or static IP) follow the instructions in
 
-C:\OpticsFoundry\OpticsFoundry_Sequencer_Zturn\OpticsFoundry_Sequencer_Zturn_Vitis_2023.1\OpticsFoundry_Seq_Zturn_App\src\main.c.
+C:\OpticsFoundry\OF_Sequencer_Zturn\OF_Sequencer_Zturn_Vitis_2023.1\OpticsFoundry_Seq_Zturn_App\src\main.c.
 
 Project specific TCP/IP communication code is contained in echo.c. An interpreter for a very simple programing language running on the ARM core of the MircroZed is implemented using the code in the OpticsFoundryCPUCommandSequencer folder.
 
@@ -67,7 +67,7 @@ Project specific TCP/IP communication code is contained in echo.c. An interprete
 
 Use Vivado 2023.1 (and not another Vivado version) to open project 
 
-C:\OpticsFoundry\OpticsFoundry_Sequencer_Zturn\OpticsFoundry_Sequencer_Zturn_Vivado_2023.1\FireflyControl_1.xpr
+C:\OpticsFoundry\OF_Sequencer_Zturn\OF_Sequencer_Zturn_Vivado_2023.1\FireflyControl_1.xpr
 
 Update all IP.
 
@@ -85,7 +85,7 @@ OpticsFoundry_Seq_Zturn_Platform
 
 select "Update Hardware Specifications" and select the file you just exported, i.e. usually
 
-C:/OpticsFoundry/OpticsFoundry_Sequencer_Zturn/OpticsFoundry_Sequencer_Zturn_Vivado_2023.1/design_1_wrapper.xsa
+C:/OpticsFoundry/OF_Sequencer_Zturn/OF_Sequencer_Zturn_Vivado_2023.1/design_1_wrapper.xsa
 
 Then, as explained above, rebuild the firmware, create boot image, and program flash.
 
