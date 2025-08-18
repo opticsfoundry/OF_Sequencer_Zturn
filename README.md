@@ -1,4 +1,4 @@
-# OpticsFoundry Sequencer for MicroZed 7020
+# OpticsFoundry Sequencer for Z-turn Board V2
 
 ## Introduction
 
@@ -47,7 +47,7 @@ Right click on "Assistant" OpticsFoundry_Seq_Zturn_App -> Release and select it.
 
 Right click on projects in "Explorer" and select "Build all", or just "Build", then "Create Boot Image".
 
-Connect JTAG cable to the MicroZed (e.g. the Digilent JTAG-HS2 + adapter cable), select "Explorer" -> "Program Flash"
+Connect JTAG cable to the Z-turn Board V2 (e.g. the Digilent JTAG-HS2 + adapter cable), select "Explorer" -> "Program Flash"
 
 Use OpticsFoundry_Control_OpticsFoundry or OpticsFoundry_ControlLight to test the sequencer.
 
@@ -79,7 +79,7 @@ After creating the bitstream (which takes about 15 minutes), export it using
 
 File -> Export -> Export Hardware -> "Include Bitstream"-> Finish
 
-To include this bitstream in the MicroZed firmware, in Vitis, in "Explorer" right click on 
+To include this bitstream in the Z-turn Board V2 firmware, in Vitis, in "Explorer" right click on 
 
 OpticsFoundry_Seq_Zturn_Platform 
 
@@ -95,5 +95,5 @@ Open the project and then "Open Block Design". After the project has fully loade
 
 The main part of the code is contained in the file core.sv (under core_wrapper -> core_inst: core). It shouldn't be too difficult to understand the design by reading this file. It might be informative to read it to understand the sequences that OpticsFoundry_Control and OpticsFoundry_ControlLight send to the sequencer. (You can inspect an ASCII file dump of those sequences by enabling the "Debug FPGA buffer" option in the "System debug options" menu of OpticsFoundry_Control).
 
-The pinout to the MicroZed header is defined under "Constraints -> constr_1 -> MicroZed_constraints.xdc".
+The pinout to the Z-turn Board V2 header is defined under "Constraints -> constr_1 -> MicroZed_constraints.xdc".
 
