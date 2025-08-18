@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<systemproject:SystemProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" xmlns:systemproject="http://www.xilinx.com/systemproject" name="OpticsFoundry_Seq_Zturn_App_system" platform="C:/OpticsFoundry/OF_Sequencer_Zturn/OF_Sequencer_Zturn_Vitis_2023.1/OpticsFoundry_Seq_Zturn_Platform/export/OpticsFoundry_Seq_Zturn_Platform/OpticsFoundry_Seq_Zturn_Platform.xpfm" platformUID="xilinx:pynq-z2::0.0(custom)" sysConfig="OpticsFoundry_Seq_Zturn_Platform" runtime="cpp" rootFSLocation="" linuxImage="" sysroot="">
+  <configuration name="Debug" id="com.xilinx.sdx.system.managedbuilder.debugConfiguration.323125372">
+    <configBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="OpticsFoundry_Seq_Zturn_App" domainName="standalone_ps7_cortexa9_0" domainPrettyName="standalone_ps7_cortexa9_0" appBuildConfig="Debug"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </configBuildOptions>
+    <lastBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="OpticsFoundry_Seq_Zturn_App" domainName="standalone_ps7_cortexa9_0" domainPrettyName="standalone_ps7_cortexa9_0" appBuildConfig="Debug"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </lastBuildOptions>
+  </configuration>
+  <configuration name="Release" id="com.xilinx.sdx.system.managedbuilder.releaseConfiguration.1542394950">
+    <configBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="OpticsFoundry_Seq_Zturn_App" domainName="standalone_ps7_cortexa9_0" domainPrettyName="standalone_ps7_cortexa9_0" appBuildConfig="Release"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </configBuildOptions>
+  </configuration>
+</systemproject:SystemProject>

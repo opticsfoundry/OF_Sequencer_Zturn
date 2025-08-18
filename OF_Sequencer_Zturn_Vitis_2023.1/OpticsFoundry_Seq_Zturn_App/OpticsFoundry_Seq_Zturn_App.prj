@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<sdkproject:SdkProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" name="OpticsFoundry_Seq_Zturn_App" location="C:/OpticsFoundry/OF_Sequencer_Zturn/OF_Sequencer_Zturn_Vitis_2023.1/OpticsFoundry_Seq_Zturn_App" platform="C:/OpticsFoundry/OF_Sequencer_Zturn/OF_Sequencer_Zturn_Vitis_2023.1/OpticsFoundry_Seq_Zturn_Platform/export/OpticsFoundry_Seq_Zturn_Platform/OpticsFoundry_Seq_Zturn_Platform.xpfm" platformUID="xilinx:pynq-z2::0.0(custom)" systemProject="OpticsFoundry_Seq_Zturn_App_system" sysConfig="OpticsFoundry_Seq_Zturn_Platform" runtime="cpp" cpu="standalone_ps7_cortexa9_0" cpuInstance="ps7_cortexa9_0" os="standalone" mssSignature="080a3b2808dc7460bc306cff0850c777">
+  <configuration name="Debug" id="xilinx.gnu.armv7.exe.debug.308532248">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+    <lastBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <configuration name="Release" id="xilinx.gnu.armv7.exe.release.470031117" dirty="true">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <template appTemplateName="lwip_echo_server" hasBspSettings="true"/>
+</sdkproject:SdkProject>
