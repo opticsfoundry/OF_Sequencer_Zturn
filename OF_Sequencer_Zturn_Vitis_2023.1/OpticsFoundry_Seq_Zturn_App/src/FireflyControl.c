@@ -30,6 +30,10 @@ extern void RunEventLoop(); //defined in main.c
 
 #include "FireflyControl.h"
 
+//I2C port
+#include "xiicps.h"
+#include "xil_printf.h"
+
 //Mirco/PicoZed 7020: 1GByte of DDR  XPAR_PS7_DDR_0_S_AXI_HIGHADDR = 0x3FFFFFFF
 //PYNQ Z2: 512MByte of DDR           XPAR_PS7_DDR_0_S_AXI_HIGHADDR = 0x1FFFFFFF
 
@@ -413,11 +417,46 @@ void WriteConfigBit(unsigned short BitNr, unsigned short value) {
 	XGpio_DiscreteWrite(&axi_gpio_config_status, 1, fabric_config);
 }
 
+void WriteConfigBits(unsigned short StartBitNr,
+                     unsigned short NrOfBits,
+                     u32 value)
+{
+    if (NrOfBits == 0 || NrOfBits > 32)
+        return;
+    u32 mask;
+    if (NrOfBits == 32)
+        mask = 0xFFFFFFFFu;
+    else
+        mask = ((1u << NrOfBits) - 1u) << StartBitNr;
+    u32 newbits = (value << StartBitNr) & mask;
+    fabric_config = (fabric_config & ~mask) | newbits;
+    XGpio_DiscreteWrite(&axi_gpio_config_status, 1, fabric_config);
+}
+
 u32 last_status = 0;
 bool ReadStatusBit(unsigned short BitNr, bool read_from_last_status) {
 	//if (DebugModeOn) xil_printf(" ReadStatusBit(%d,%d)\n\r", BitNr, read_from_last_status);
 	if (!read_from_last_status) last_status = XGpio_DiscreteRead(&axi_gpio_config_status, 2);
 	return ( (last_status & (1 << BitNr)) > 0 ) ? TRUE : FALSE;
+}
+
+u32 ReadStatusBits(unsigned short StartBitNr,
+                   unsigned short NrOfBits,
+                   bool read_from_last_status)
+{
+    //if (DebugModeOn)
+    //    xil_printf(" ReadStatusBits(%d,%d,%d)\n\r",
+    //               StartBitNr, NrOfBits, read_from_last_status);
+    if (NrOfBits == 0 || NrOfBits > 32)
+        return 0;
+    if (!read_from_last_status)
+        last_status = XGpio_DiscreteRead(&axi_gpio_config_status, 2);
+    u32 mask;
+    if (NrOfBits == 32)
+        mask = 0xFFFFFFFFu;
+    else
+        mask = (1u << NrOfBits) - 1u;
+    return (last_status >> StartBitNr) & mask;
 }
 
 bool GetExternalClockLocked(){
@@ -521,6 +560,8 @@ u64 ReadPeriodicTriggerCount() {
 }
 
 u32 ReadCurrentSequenceAddress() {
+	//2026 03 18 disabled in block design, as there is timing closure error on address register.
+	//proper way to solve this is to do less with address register, potentially by pipelining some of its function.
 	return XGpio_DiscreteRead(&axi_gpio_core_status_3, 2);
 }
 
@@ -658,11 +699,27 @@ void ResetSecondaryCoreInterrupt() {
 }
 
 void ResetInputMemCoreInterrupt() {
-	ToggleConfigBit(18); //should be 19, after Vivado recompile
+	ToggleConfigBit(19);
 }
 
 void SetInputMemCoreInterrupt(unsigned char OnOff) {
-	WriteConfigBit(18,OnOff > 0);
+	WriteConfigBit(19,OnOff > 0);
+}
+
+void SetHeartbeat(unsigned char OnOff) {
+	WriteConfigBit(20,OnOff > 0); //was 22
+}
+
+void SetCPUI2C0Destination(u8 Destination) {
+	WriteConfigBit(21,Destination > 0); //was 20, for now just two destinations
+}
+
+void SwitchBuzzer(unsigned char OnOff) {
+	WriteConfigBit(24,OnOff > 0);  //was 21, 2025 05 16: in the future should be 24
+}
+
+void SetPSOptions(u8 value) {
+	WriteConfigBits(24,8, value);  //was 21, 2025 05 16: in the future should be 24
 }
 
 u32 DMA0_transfer_max_start_space = 0; //in code lines, not clock cycles
@@ -1436,19 +1493,7 @@ void FireflyControl_modify_sequence() {
 	u32 modify_data_length_in_64bit_commands = number_bytes / 12;
 	server_set_binary_mode((u8*)(DDR_MODIFY_BUFFER_START), DDR_MODIFY_BUFFER_LENGTH_IN_BYTES, number_bytes);
 
-	XTime tStart, tEnd;
-	XTime_GetTime(&tStart);
-	long double wait_time_in_seconds = 0;
-	long double timeout_in_seconds = 5.0;
-	while ((!server_last_digital_data_transfer_successful()) && (wait_time_in_seconds < timeout_in_seconds)) {
-		RunEventLoop();
-		XTime_GetTime(&tEnd);
-		wait_time_in_seconds = (long double)((tEnd - tStart) *2)/(long double)XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ;
-	}
-	if (!(wait_time_in_seconds < timeout_in_seconds)) {
-		if (DebugModeOn) xil_printf("FireflyControl_modify_data : didn't receive modification data\r\n");
-		return;
-	}
+	if (!server_wait_till_digital_tranfer_done()) return;
 	//modification data contains two tables, one after the other.
 	//the first table is a list of 32-bit values, containing the list index of the 64 bit command that needs to be modified
 	//the second table contains a list of the new 64-bit commands.
@@ -1957,6 +2002,187 @@ void WriteToSerialPort(u8 NrCommand) {
 	//ToDo: serial port communication, from preloaded command list
 }
 
+
+const u8_t IIC_DEVICE_ID[2] = {XPAR_XIICPS_0_DEVICE_ID, XPAR_XIICPS_1_DEVICE_ID};   /* adjust if needed */
+#define I2C_BUS_BUSY_TIMEOUT 1000000U
+#define I2C_MAX_DATA_SIZE_IN_BYTES 65536
+#define I2C_MAX_PORT_NR 1
+u8_t I2C_data[I2C_MAX_DATA_SIZE_IN_BYTES];
+	
+
+static int firefly_control_wait_for_i2c_idle(XIicPs *Iic, u32 timeout)
+{
+	while (XIicPs_BusIsBusy(Iic) != 0U) {
+		if (timeout == 0U) {
+			return XST_FAILURE;
+		}
+		timeout--;
+	}
+
+	return XST_SUCCESS;
+}
+
+static int firefly_control_init_i2c0(XIicPs *Iic, u8_t I2C_port, u32 I2C_SCLK_HZ)
+{
+	XIicPs_Config *Cfg;
+	int Status;
+
+	Cfg = XIicPs_LookupConfig(IIC_DEVICE_ID[I2C_port]);
+	if (Cfg == NULL) {
+		xil_printf("I2C0: config lookup failed\r\n");
+		return XST_FAILURE;
+	}
+
+	Status = XIicPs_CfgInitialize(Iic, Cfg, Cfg->BaseAddress);
+	if (Status != XST_SUCCESS) {
+		xil_printf("I2C0: init failed: %d\r\n", Status);
+		return Status;
+	}
+
+	Status = XIicPs_SetSClk(Iic, I2C_SCLK_HZ);
+	if (Status != XST_SUCCESS) {
+		xil_printf("I2C0: set clock failed: %d\r\n", Status);
+		return Status;
+	}
+
+	return XST_SUCCESS;
+}
+
+int firefly_control_transmit_I2C(u8_t I2C_port, u8_t I2C_ADDR, u32_t send_length, u8_t *send_data, u32_t receive_length, u8_t *receive_data, u32 I2C_SCLK_HZ)
+{
+	XIicPs Iic;
+	u8 reg_addr = 0U;
+	int Status = XST_FAILURE;
+	if ((send_length == 0U) && (receive_length == 0U)) {
+		xil_printf("firefly_control_transmit_I2C: invalid transmit arguments\r\n");
+		return XST_FAILURE;
+	}
+
+	if ((send_length > 0U) && (send_data == NULL)) {
+		xil_printf("firefly_control_transmit_I2C: invalid write arguments\r\n");
+		return XST_FAILURE;
+	}
+
+	if ((receive_length > 0U) && (receive_data == NULL)) {
+		xil_printf("firefly_control_transmit_I2C: receive buffer not provided\r\n");
+		return XST_FAILURE;
+	}
+
+	if (send_length > 0U) {
+		reg_addr = send_data[0];
+	}
+	Status = firefly_control_init_i2c0(&Iic, I2C_port, I2C_SCLK_HZ);
+	if (Status != XST_SUCCESS) {
+		xil_printf("firefly_control_transmit_I2C: I2C initialization failed\r\n");
+		return Status;
+	}
+
+	if ((send_length > 0U) && (receive_length > 0U)) {
+		Status = XIicPs_SetOptions(&Iic, XIICPS_REP_START_OPTION);
+		if (Status != XST_SUCCESS) {
+			xil_printf("firefly_control_transmit_I2C: enable repeated start failed: %d\r\n", Status);
+			return Status;
+		}
+	}
+
+	if (DebugModeOn) {
+		xil_printf("firefly_control_transmit_I2C sending %d bytes: [", send_length);
+		for (int n = 0; n<send_length; n++) xil_printf("%02x, ", send_data[n]);
+		xil_printf("]\r\n");
+	}
+	if (send_length > 0U) {
+		Status = XIicPs_MasterSendPolled(&Iic, send_data, send_length, I2C_ADDR);
+		if (Status != XST_SUCCESS) {
+			xil_printf("firefly_control_transmit_I2C: send failed: %d\r\n", Status);
+			return Status;
+		}
+	}
+
+	if (receive_length > 0U) {
+		if (DebugModeOn) {
+			for (u32_t n = 0; n<receive_length; n++) receive_data[n]=0;
+		}
+		Status = XIicPs_MasterRecvPolled(&Iic, receive_data, receive_length, I2C_ADDR);
+		if (send_length > 0U) {
+			(void)XIicPs_ClearOptions(&Iic, XIICPS_REP_START_OPTION);
+		}
+		if (Status != XST_SUCCESS) {
+			xil_printf("firefly_control_transmit_I2C: read failed: %d\r\n", Status);
+			return Status;
+		}
+	}
+	Status = firefly_control_wait_for_i2c_idle(&Iic, I2C_BUS_BUSY_TIMEOUT);
+	if (Status != XST_SUCCESS) {
+		xil_printf("firefly_control_transmit_I2C: timeout after read\r\n");
+		return Status;
+	}
+
+	if (DebugModeOn) {
+		if (send_length > 0U) {
+			xil_printf("firefly_control_I2C_transmit: wrote %u byte(s), first byte 0x%02x\r\n", send_length, reg_addr);
+
+		}
+		if ((send_length > 0U) && (receive_length >= 1U)) {
+			xil_printf("firefly_control_I2C_transmit: reg 0x%02x, read %u byte(s), first byte 0x%02x\r\n",
+				reg_addr, receive_length, receive_data[0]);
+		} else if (receive_length >= 1U) {
+			xil_printf("firefly_control_I2C_transmit: read %u byte(s), first byte 0x%02x\r\n",
+				receive_length, receive_data[0]);
+		}
+	}
+	if (receive_length >= 1U) {
+		if (DebugModeOn) {
+			xil_printf("firefly_control_transmit_I2C read %d bytes: [", receive_length);
+			u8_t  receive_length_shortened = (receive_length>255) ? 255 : receive_length;
+			for (int n = 0; n<receive_length_shortened; n++) xil_printf("%02x, ", receive_data[n]);
+			xil_printf("]\r\n");
+		}
+	}
+	return XST_SUCCESS;
+}
+
+void FireflyControl_transmit_I2C() {
+	if (DebugModeOn) xil_printf("FireflyControl_transmit_I2C\r\n");
+	u8 I2C_port = server_read_u8();
+	if (I2C_port>I2C_MAX_PORT_NR) I2C_port=I2C_MAX_PORT_NR;
+	u8 I2C_destination = server_read_u8();
+	u8 I2C_address = server_read_u8();
+	u32 I2C_clock_frequency_in_Hz = server_read_u32();
+	if (I2C_clock_frequency_in_Hz > 1000000) I2C_clock_frequency_in_Hz = 100000;
+	u32 number_bytes_to_send = server_read_u32();
+	u32 number_bytes_to_read = server_read_u32();
+	if (number_bytes_to_read > I2C_MAX_DATA_SIZE_IN_BYTES) {
+		if (DebugModeOn) xil_printf("FireflyControl_transmit_I2C : data exceeds max I2C size. If you really need more, modify the Zynq firmware in Vitis.\r\n");
+		return; //ToDo: correct error handling
+	}
+	if (number_bytes_to_send > I2C_MAX_DATA_SIZE_IN_BYTES) {
+		if (DebugModeOn) xil_printf("FireflyControl_transmit_I2C : data exceeds max I2C size. If you really need more, modify the Zynq firmware in Vitis.\r\n");
+		return; //ToDo: correct error handling
+	}
+	if (I2C_port==0) SetCPUI2C0Destination(I2C_destination);
+	if (number_bytes_to_send>0) {
+		server_set_binary_mode((u8*)(I2C_data), I2C_MAX_DATA_SIZE_IN_BYTES, number_bytes_to_send);
+		if (!server_wait_till_digital_tranfer_done()) return;
+	}
+	int Status = firefly_control_transmit_I2C(I2C_port, I2C_address, number_bytes_to_send, I2C_data, number_bytes_to_read, I2C_data, I2C_clock_frequency_in_Hz);
+	if (Status != XST_SUCCESS) {
+		if (DebugModeOn) xil_printf("FireflyControl_transmit_I2C : I2C write failed\r\n");
+		server_write_u32(0);
+	} else {
+		if (DebugModeOn) xil_printf("FireflyControl_transmit_I2C : I2C write successful\r\n");
+		server_write_u32(1);
+		server_write_u32(number_bytes_to_read);
+		if (number_bytes_to_read>0) server_send_binary((char*)(I2C_data), number_bytes_to_read, DebugModeOn);
+	}
+}
+
+
+void FireflyControl_set_PS_options() {
+	if (DebugModeOn) xil_printf("FireflyControl_set_PS_options\r\n");
+	u8 options = server_read_u8();
+	SetPSOptions(options);
+}
+
 u32 lastPLtoPSCommand = 0;
 void CheckForPLToPSCommand(){
 	u32 currentPLtoPSCommand = GetPLtoPSCommand(/*read_from_last_status*/ FALSE);
@@ -1981,6 +2207,12 @@ void CheckForPLToPSCommand(){
 	}
 }
 
+void ProduceHeartBeat() {
+	static u8 heartbeat = FALSE;
+	heartbeat = !heartbeat;
+	SetHeartbeat(heartbeat);
+}
+
 void FireflyControlLoop() {
 	//if (DebugModeOn) xil_printf("f");
 	if (InFireflyControlLoop) return;
@@ -1991,6 +2223,7 @@ void FireflyControlLoop() {
 		called_once = 1;
 	}
 	CheckInputMemBufferReadout(/* LastTransfer */ FALSE);
+	ProduceHeartBeat();
 	if (Sequence_running) {
 		CheckForPLToPSCommand();
 		if (DebugModeOn) PrintSequenceStatusRegularly();
@@ -2047,7 +2280,6 @@ void FireflyControlLoop() {
 			firefly_control_test_adc();
 		} 
 		
-		
 		else if (strcmp(command,"cs_assemble_sequence") == 0) {
 			CS_AssembleSequence();
 		} else if (strcmp(command,"cs_add_command") == 0) {
@@ -2069,10 +2301,6 @@ void FireflyControlLoop() {
 		} else if (strcmp(command,"cs_print_error_messages") == 0) {	
 			CS_PrintErrorMessages();
 		} 
-
-
-		
-		
 		else if (strcmp(command,"close") == 0) {
 
 		} else if (strcmp(command,"select_external_clock_0") == 0) {
@@ -2143,6 +2371,10 @@ void FireflyControlLoop() {
 			FireflyControl_get_boot_watchdog();
 		} else if (strcmp(command,"set_boot_watchdog") == 0) {
 			FireflyControl_set_boot_watchdog();
+		} else if (strcmp(command,"transmit_I2C") == 0) {
+			FireflyControl_transmit_I2C();
+		} else if (strcmp(command,"set_PS_options") == 0) {
+			FireflyControl_set_PS_options();
 		} else
 			if (DebugModeOn) xil_printf("Command not recognized (%s)\r\n", command);
 	}

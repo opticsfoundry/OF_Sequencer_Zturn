@@ -36,6 +36,8 @@ module design_1_wrapper
     I2C_0_sda_io,
     I2C_1_scl_io,
     I2C_1_sda_io,
+    I2C_zturn_scl_io,
+    I2C_zturn_sda_io,
     I2C_RESET,
     LED_0_BLUE,
     LED_0_GREEN,
@@ -44,6 +46,7 @@ module design_1_wrapper
     LED_ext_clock_0_locked,
     LED_select_ext_clock_locked,
     LED_running,
+    SPI_READY,
     SPI_0_MISO,
     SPI_0_MOSI,
     SPI_0_SCLK,
@@ -62,7 +65,8 @@ module design_1_wrapper
     output_bus,
     trigger_out,
     core_dig_in,
-    core_dig_out);
+    core_dig_out,
+    heartbeat);
   inout [14:0]DDR_addr;
   inout [2:0]DDR_ba;
   inout DDR_cas_n;
@@ -88,6 +92,8 @@ module design_1_wrapper
   inout I2C_0_sda_io;
   inout I2C_1_scl_io;
   inout I2C_1_sda_io;
+  inout I2C_zturn_scl_io;
+  inout I2C_zturn_sda_io;
   output [0:0]I2C_RESET;
   output [0:0]LED_0_BLUE;
   output [0:0]LED_0_GREEN;
@@ -96,6 +102,7 @@ module design_1_wrapper
   output LED_ext_clock_0_locked;
   output LED_select_ext_clock_locked;
   output LED_running;
+  input SPI_READY;
   input SPI_0_MISO;
   output SPI_0_MOSI;
   output SPI_0_SCLK;
@@ -115,6 +122,7 @@ module design_1_wrapper
   output trigger_out;
   input [7:0] core_dig_in;
   output [7:0] core_dig_out;
+  output heartbeat;
 
   wire [14:0]DDR_addr;
   wire [2:0]DDR_ba;
@@ -139,21 +147,34 @@ module design_1_wrapper
   wire FIXED_IO_ps_srstb;
   wire I2C_0_scl_io;
   wire I2C_0_sda_io;
-  wire I2C_1_scl_io;
-  wire I2C_1_sda_io;
+  
   wire I2C_0_scl_i;
   wire I2C_0_scl_o;
   wire I2C_0_scl_t;
   wire I2C_0_sda_i;
+  
+  wire I2C_1_scl_io;
   wire I2C_1_scl_i;
   wire I2C_1_scl_o;
   wire I2C_1_scl_t;
+  wire I2C_1_sda_io;
   wire I2C_1_sda_i;
   wire I2C_1_sda_o;
   wire I2C_1_sda_t;
+  
+  
+  wire I2C_zturn_scl_io;
+  wire I2C_zturn_scl_i;
+  wire I2C_zturn_scl_o;
+  wire I2C_zturn_scl_t;
+  wire I2C_zturn_sda_io;
+  wire I2C_zturn_sda_i;
+  wire I2C_zturn_sda_o;
+  wire I2C_zturn_sda_t;
+  
   wire [0:0]I2C_RESET;
-  wire IIC_0_sda_o;
-  wire IIC_0_sda_t;
+  wire I2C_0_sda_o;
+  wire I2C_0_sda_t;
   wire [0:0]LED_0_BLUE;
   wire [0:0]LED_0_GREEN;
   wire [0:0]LED_0_RED;
@@ -161,6 +182,7 @@ module design_1_wrapper
   wire LED_ext_clock_0_locked;
   wire LED_select_ext_clock_locked;
   wire LED_running;
+  wire SPI_READY;
   wire SPI_0_MISO;
   wire SPI_0_MOSI;
   wire SPI_0_SCLK;
@@ -180,6 +202,7 @@ module design_1_wrapper
   wire trigger_out;
   wire [7:0] core_dig_in;
   wire [7:0] core_dig_out;
+  wire heartbeat;
 
 IOBUF I2C_0_scl_iobuf
        (.I(I2C_0_scl_o),
@@ -204,6 +227,21 @@ IOBUF I2C_0_scl_iobuf
         .IO(I2C_1_sda_io),
         .O(I2C_1_sda_i),
         .T(I2C_1_sda_t));
+
+
+  IOBUF I2C_zturn_scl_iobuf
+       (.I(I2C_zturn_scl_o),
+        .IO(I2C_zturn_scl_io),
+        .O(I2C_zturn_scl_i),
+        .T(I2C_zturn_scl_t));
+
+  IOBUF I2C_zturn_sda_iobuf
+       (.I(I2C_zturn_sda_o),
+        .IO(I2C_zturn_sda_io),
+        .O(I2C_zturn_sda_i),
+        .T(I2C_zturn_sda_t));
+
+
 
 
   design_1 design_1_i
@@ -232,15 +270,21 @@ IOBUF I2C_0_scl_iobuf
         .I2C_0_scl_o(I2C_0_scl_o),
         .I2C_0_scl_t(I2C_0_scl_t),
         .I2C_0_sda_i(I2C_0_sda_i),
+        .I2C_0_sda_o(I2C_0_sda_o),
+        .I2C_0_sda_t(I2C_0_sda_t),    
         .I2C_1_scl_i(I2C_1_scl_i),
         .I2C_1_scl_o(I2C_1_scl_o),
         .I2C_1_scl_t(I2C_1_scl_t),
         .I2C_1_sda_i(I2C_1_sda_i),
         .I2C_1_sda_o(I2C_1_sda_o),
         .I2C_1_sda_t(I2C_1_sda_t),
+        .I2C_zturn_scl_i(I2C_zturn_scl_i),
+        .I2C_zturn_scl_o(I2C_zturn_scl_o),
+        .I2C_zturn_scl_t(I2C_zturn_scl_t),
+        .I2C_zturn_sda_i(I2C_zturn_sda_i),
+        .I2C_zturn_sda_o(I2C_zturn_sda_o),
+        .I2C_zturn_sda_t(I2C_zturn_sda_t),
         .I2C_RESET(I2C_RESET),
-        .IIC_0_sda_o(IIC_0_sda_o),
-        .IIC_0_sda_t(IIC_0_sda_t),
         .LED_0_BLUE(LED_0_BLUE),
         .LED_0_GREEN(LED_0_GREEN),
         .LED_0_RED(LED_0_RED),
@@ -248,6 +292,7 @@ IOBUF I2C_0_scl_iobuf
         .LED_ext_clock_0_locked(LED_ext_clock_0_locked),
         .LED_select_ext_clock_locked(LED_select_ext_clock_locked),
         .LED_running(LED_running),
+        .SPI_READY(SPI_READY),
         .SPI_0_MISO(SPI_0_MISO),
         .SPI_0_MOSI(SPI_0_MOSI),
         .SPI_0_SCLK(SPI_0_SCLK),
@@ -265,6 +310,7 @@ IOBUF I2C_0_scl_iobuf
         .ext_trigger_1(ext_trigger_1),
         .output_bus(output_bus),
         .trigger_out(trigger_out),
+        .heartbeat(heartbeat),
         .core_dig_in(core_dig_in),
         .core_dig_out(core_dig_out)
         );

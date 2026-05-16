@@ -33,3 +33,8 @@ bsp write
 bsp reload
 catch {bsp regenerate}
 platform generate -domains standalone_ps7_cortexa9_0 
+platform active {OpticsFoundry_Seq_Zturn_Platform}
+platform config -updatehw {C:/OpticsFoundry/OF_Sequencer_Zturn/OF_Sequencer_Zturn_Vivado_2023.1/design_1_wrapper.xsa}
+platform clean
+platform clean
+platform generate

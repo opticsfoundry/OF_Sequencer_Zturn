@@ -94,210 +94,243 @@ set_property IOSTANDARD LVCMOS18 [get_ports -filter { IOBANK == 34 } ]
 #set_property -dict { PACKAGE_PIN L15   IOSTANDARD LVCMOS33 }[get_ports { LEDC0BLUE  }]; #IO_L22N_T3_AD7N_35 Sch=led4_b
 
 #NET JX1_LVDS_0_N    LOC = T10 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_0_N"
-set_property -dict { PACKAGE_PIN T10    IOSTANDARD LVCMOS33 } [get_ports {ext_trigger_0}]
+set_property -dict { PACKAGE_PIN T10    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_0_N}]
+#ToDo Screen_T_IRQ}]
 #NET JX1_LVDS_0_P    LOC = T11 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_0_P"
-set_property -dict { PACKAGE_PIN T11    IOSTANDARD LVCMOS33 } [get_ports {ext_trigger_1}]
+set_property -dict { PACKAGE_PIN T11    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[6]}]
+#ToDo CPU_RST}]
 #NET JX1_LVDS_1_N    LOC = U12 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_1_N"
-set_property -dict { PACKAGE_PIN U12    IOSTANDARD LVCMOS33 } [get_ports {ext_condition_0}]
+set_property -dict { PACKAGE_PIN U12    IOSTANDARD LVCMOS33 } [get_ports {Sync}]
 #NET JX1_LVDS_1_P    LOC = T12 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_1_P"
-set_property -dict { PACKAGE_PIN T12    IOSTANDARD LVCMOS33 } [get_ports {ext_condition_1}]
+set_property -dict { PACKAGE_PIN T12    IOSTANDARD LVCMOS33 } [get_ports {clock_or_strobe}]
 #NET JX1_LVDS_10_N   LOC = U15 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_10_N"
-set_property -dict { PACKAGE_PIN U15    IOSTANDARD LVCMOS33 } [get_ports {output_bus[0]}]
+set_property -dict { PACKAGE_PIN U15    IOSTANDARD LVCMOS33 } [get_ports {SPI_0_MOSI}]
 #NET JX1_LVDS_10_P   LOC = U14 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_10_P"
-set_property -dict { PACKAGE_PIN U14    IOSTANDARD LVCMOS33 } [get_ports {output_bus[1]}]
+set_property -dict { PACKAGE_PIN U14    IOSTANDARD LVCMOS33 } [get_ports {SPI_0_SCLK}]
 #NET JX1_LVDS_11_N   LOC = U19 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_11_N"
-set_property -dict { PACKAGE_PIN U19    IOSTANDARD LVCMOS33 } [get_ports {clock_or_strobe}]
+set_property -dict { PACKAGE_PIN U19    IOSTANDARD LVCMOS33 } [get_ports {output_bus[25]}] 
+#ToDo should be ClockOut}]
 #NET JX1_LVDS_11_P   LOC = U18 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_11_P"
 set_property -dict { PACKAGE_PIN U18    IOSTANDARD LVCMOS33 } [get_ports {ext_clock_0}]
 #NET JX1_LVDS_12_N   LOC = P19 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_12_N"
-set_property -dict { PACKAGE_PIN P19    IOSTANDARD LVCMOS33 } [get_ports {output_bus[2]}]
+set_property -dict { PACKAGE_PIN P19    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_12_N}]
+#corresponds to FPGA_J1_52}]
 #NET JX1_LVDS_12_P   LOC = N18 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_12_P"
-set_property -dict { PACKAGE_PIN N18    IOSTANDARD LVCMOS33 } [get_ports {ext_clock_1}]
+set_property -dict { PACKAGE_PIN N18    IOSTANDARD LVCMOS33 } [get_ports {I2C_1_scl_io}]
 #NET JX1_LVDS_13_N   LOC = P20 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_13_N"
-set_property -dict { PACKAGE_PIN P20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[3]}]
+set_property -dict { PACKAGE_PIN P20    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[5]}] 
+# should be DONE}]
 #NET JX1_LVDS_13_P   LOC = N20 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_13_P"
-set_property -dict { PACKAGE_PIN N20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[24]}]
+set_property -dict { PACKAGE_PIN N20    IOSTANDARD LVCMOS33 } [get_ports {SPI_0_MISO}]
 #NET JX1_LVDS_14_N   LOC = U20 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_14_N"
-set_property -dict { PACKAGE_PIN U20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[5]}]
+set_property -dict { PACKAGE_PIN U20    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_14_N}]
+#ToDo Screen_T_CLK}]
 #NET JX1_LVDS_14_P   LOC = T20 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_14_P"
-set_property -dict { PACKAGE_PIN T20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[4]}]
+set_property -dict { PACKAGE_PIN T20    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_14_P}]
+#ToDo FPGA_J1_56}]
 #NET JX1_LVDS_15_N   LOC = W20 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_15_N"
-set_property -dict { PACKAGE_PIN W20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[7]}]
+set_property -dict { PACKAGE_PIN W20    IOSTANDARD LVCMOS33 } [get_ports {storing_data}]
 #NET JX1_LVDS_15_P   LOC = V20 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_15_P"
-set_property -dict { PACKAGE_PIN V20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[6]}]
+set_property -dict { PACKAGE_PIN V20    IOSTANDARD LVCMOS33 } [get_ports {LED_running}]
 #NET JX1_LVDS_16_N   LOC = Y19 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_16_N"
-set_property -dict { PACKAGE_PIN Y19    IOSTANDARD LVCMOS33 } [get_ports {output_bus[9]}]
+set_property -dict { PACKAGE_PIN Y19    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_16_N}]
+#ToDo Screen_LED}]
 #NET JX1_LVDS_16_P   LOC = Y18 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_16_P"
-set_property -dict { PACKAGE_PIN Y18    IOSTANDARD LVCMOS33 } [get_ports {output_bus[8]}]
+set_property -dict { PACKAGE_PIN Y18    IOSTANDARD LVCMOS33 } [get_ports {Screen_SDO}]
 #NET JX1_LVDS_17_N   LOC = W16 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_17_N"
-set_property -dict { PACKAGE_PIN W16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[11]}]
+set_property -dict { PACKAGE_PIN W16    IOSTANDARD LVCMOS33 } [get_ports {core_options_LED_0}]
 #NET JX1_LVDS_17_P   LOC = V16 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_17_P"
-set_property -dict { PACKAGE_PIN V16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[10]}]
+set_property -dict { PACKAGE_PIN V16    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_17_P}]
+#ToDo Screen_DC}]
 #NET JX1_LVDS_18_N   LOC = R17 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_18_N"
-set_property -dict { PACKAGE_PIN R17    IOSTANDARD LVCMOS33 } [get_ports {output_bus[13]}]
+set_property -dict { PACKAGE_PIN R17    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_18_N}]
+#ToDo Screen_SDI}]
 #NET JX1_LVDS_18_P   LOC = R16 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_18_P"
-set_property -dict { PACKAGE_PIN R16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[12]}]
+set_property -dict { PACKAGE_PIN R16    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_18_P}]
+# ToDo Screen_SCK}]
 #NET JX1_LVDS_19_N   LOC = R18 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_19_N"
-set_property -dict { PACKAGE_PIN R18    IOSTANDARD LVCMOS33 } [get_ports {output_bus[15]}]
+set_property -dict { PACKAGE_PIN R18    IOSTANDARD LVCMOS33 } [get_ports {LED_clock_locked}]
+#ToDo Screen_RESET}]
 #NET JX1_LVDS_19_P   LOC = T17 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_19_P"
-set_property -dict { PACKAGE_PIN T17    IOSTANDARD LVCMOS33 } [get_ports {output_bus[14]}]
+set_property -dict { PACKAGE_PIN T17    IOSTANDARD LVCMOS33 } [get_ports {interlock}]
 #NET JX1_LVDS_2_N    LOC = V13 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_2_N"
-set_property -dict { PACKAGE_PIN V13    IOSTANDARD LVCMOS33 } [get_ports {output_bus[25]}]
+set_property -dict { PACKAGE_PIN V13    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_2_N}]
+#ToDo Screen_T_DIN}]
 #NET JX1_LVDS_2_P    LOC = U13 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_2_P"
-set_property -dict { PACKAGE_PIN U13    IOSTANDARD LVCMOS33 } [get_ports {output_bus[26]}]
+set_property -dict { PACKAGE_PIN U13    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_2_P}] 
+#ToDo
 #NET JX1_LVDS_20_N   LOC = V18 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_20_N"
-set_property -dict { PACKAGE_PIN V18    IOSTANDARD LVCMOS33 } [get_ports {output_bus[17]}]
+set_property -dict { PACKAGE_PIN V18    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_20_N}]
+#ToDo PWR_EN}]
 #NET JX1_LVDS_20_P   LOC = V17 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_20_P"
-set_property -dict { PACKAGE_PIN V17    IOSTANDARD LVCMOS33 } [get_ports {output_bus[16]}]
+set_property -dict { PACKAGE_PIN V17    IOSTANDARD LVCMOS33 } [get_ports {LED_ext_clock_0_locked}]
+#ToDo Screen_CS}]
 #NET JX1_LVDS_21_N   LOC = W19 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_21_N"
-set_property -dict { PACKAGE_PIN W19    IOSTANDARD LVCMOS33 } [get_ports {output_bus[19]}]
+set_property -dict { PACKAGE_PIN W19    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_21_N}]
 #NET JX1_LVDS_21_P   LOC = W18 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_21_P"
-set_property -dict { PACKAGE_PIN W18    IOSTANDARD LVCMOS33 } [get_ports {output_bus[18]}]
+set_property -dict { PACKAGE_PIN W18    IOSTANDARD LVCMOS33 } [get_ports {LED_select_ext_clock_locked}]
 #NET JX1_LVDS_22_N   LOC = P18 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_22_N"
-set_property -dict { PACKAGE_PIN P18    IOSTANDARD LVCMOS33 } [get_ports {output_bus[21]}]
+set_property -dict { PACKAGE_PIN P18    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[7]}]
 #NET JX1_LVDS_22_P   LOC = N17 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_22_P"
-set_property -dict { PACKAGE_PIN N17    IOSTANDARD LVCMOS33 } [get_ports {output_bus[20]}]
+set_property -dict { PACKAGE_PIN N17    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_22_P}]
 #NET JX1_LVDS_23_N   LOC = P16 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_23_N"
-set_property -dict { PACKAGE_PIN P16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[23]}]
+set_property -dict { PACKAGE_PIN P16    IOSTANDARD LVCMOS33 } [get_ports {I2C_zturn_scl_io}]
+# should be Zturn_I2C0_SCL_out}]
 #NET JX1_LVDS_23_P   LOC = P15 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_23_P"
-set_property -dict { PACKAGE_PIN P15    IOSTANDARD LVCMOS33 } [get_ports {output_bus[22]}]
+set_property -dict { PACKAGE_PIN P15    IOSTANDARD LVCMOS33 } [get_ports {I2C_zturn_sda_io}]
+# should be Zturn_I2C0_SDA_out}]
 #NET JX1_LVDS_3_N    LOC = W13 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_3_N"
-set_property -dict { PACKAGE_PIN W13    IOSTANDARD LVCMOS33 } [get_ports {output_bus[27]}]
+set_property -dict { PACKAGE_PIN W13    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[0]}]
+# should be FPGA_SPI0_CS0_CONFIG1}]
 #NET JX1_LVDS_3_P    LOC = V12 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_3_P"
-set_property -dict { PACKAGE_PIN V12    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_3_P}]
+set_property -dict { PACKAGE_PIN V12    IOSTANDARD LVCMOS33 } [get_ports {output_bus[24]}]
 #NET JX1_LVDS_4_N    LOC = T15 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_4_N"
-set_property -dict { PACKAGE_PIN T15    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_4_N}]
+set_property -dict { PACKAGE_PIN T15    IOSTANDARD LVCMOS33 } [get_ports {heartbeat}]
 #NET JX1_LVDS_4_P    LOC = T14 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_4_P"
-set_property -dict { PACKAGE_PIN T14    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_4_P}]
+set_property -dict { PACKAGE_PIN T14    IOSTANDARD LVCMOS33 } [get_ports {uart_rtl_0_sout}]
+#ToDo Screen_T_CS}]
 #NET JX1_LVDS_5_N    LOC = R14 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_5_N"
 set_property -dict { PACKAGE_PIN R14    IOSTANDARD LVCMOS33 } [get_ports {LED_0_RED}]
 #NET JX1_LVDS_5_P    LOC = P14 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_5_P"
-set_property -dict { PACKAGE_PIN P14    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[0]}]
+set_property -dict { PACKAGE_PIN P14    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[1]}] 
+# should be CPU_SPI0_CS1_CONFIG2}]
 #NET JX1_LVDS_6_N    LOC = Y17 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_6_N"
-set_property -dict { PACKAGE_PIN Y17    IOSTANDARD LVCMOS33 } [get_ports {LED_0_GREEN}]
+set_property -dict { PACKAGE_PIN Y17    IOSTANDARD LVCMOS33 } [get_ports {LED_0_BLUE}]
 #NET JX1_LVDS_6_P    LOC = Y16 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_6_P"
-set_property -dict { PACKAGE_PIN Y16    IOSTANDARD LVCMOS33 } [get_ports {LED_0_BLUE}]
+set_property -dict { PACKAGE_PIN Y16    IOSTANDARD LVCMOS33 } [get_ports {LED_0_GREEN}]
 #NET JX1_LVDS_7_N    LOC = Y14 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_7_N"
-set_property -dict { PACKAGE_PIN Y14    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[2]}]
+set_property -dict { PACKAGE_PIN Y14    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[3]}]
 #NET JX1_LVDS_7_P    LOC = W14 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_7_P"
-set_property -dict { PACKAGE_PIN W14    IOSTANDARD LVCMOS33 } [get_ports {SPI_0_SCLK}]
+set_property -dict { PACKAGE_PIN W14    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[2]}] 
+#ToDo CPU_SPI0_CS2_CONFIG3}]
 #NET JX1_LVDS_8_N    LOC = U17 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_8_N"
-set_property -dict { PACKAGE_PIN U17    IOSTANDARD LVCMOS33 } [get_ports {SPI_0_MOSI}]
+set_property -dict { PACKAGE_PIN U17    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[4]}] 
+# should be TriggerOut}]
 #NET JX1_LVDS_8_P    LOC = T16 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_8_P"
-set_property -dict { PACKAGE_PIN T16    IOSTANDARD LVCMOS33 } [get_ports {SPI_0_MISO}]
+set_property -dict { PACKAGE_PIN T16    IOSTANDARD LVCMOS33 } [get_ports {ext_trigger_0}]
 #NET JX1_LVDS_9_N    LOC = W15 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_9_N"
-set_property -dict { PACKAGE_PIN W15    IOSTANDARD LVCMOS33 } [get_ports {SPI_1_SCLK}]
+set_property -dict { PACKAGE_PIN W15    IOSTANDARD LVCMOS33 } [get_ports {I2C_1_sda_io}]
 #NET JX1_LVDS_9_P    LOC = V15 | IOSTANDARD = LVCMOS18;  # "JX1_LVDS_9_P"
-set_property -dict { PACKAGE_PIN V15    IOSTANDARD LVCMOS33 } [get_ports {SPI_1_MOSI}]
+set_property -dict { PACKAGE_PIN V15    IOSTANDARD LVCMOS33 } [get_ports {ext_trigger_1}] 
+# should be CPU_SPI0_RDY_or_IRQ1}]
 #NET JX1_SE_0        LOC = R19 | IOSTANDARD = LVCMOS18;  # "JX1_SE_0"
 set_property -dict { PACKAGE_PIN R19    IOSTANDARD LVCMOS33 } [get_ports {trigger_out}]
 #NET JX1_SE_1        LOC = T19 | IOSTANDARD = LVCMOS18;  # "JX1_SE_1"
-set_property -dict { PACKAGE_PIN T19    IOSTANDARD LVCMOS33 } [get_ports {SPI_1_MISO}]
+set_property -dict { PACKAGE_PIN T19    IOSTANDARD LVCMOS33 } [get_ports {JX1_SE_1}]
+#ToDo
 
 # Bank 35, Vcco = Vadj
 # Set the bank voltage for bank 35.
 set_property IOSTANDARD LVCMOS18 [get_ports -filter { IOBANK == 35 } ]
 
 #NET JX2_LVDS_0_N    LOC = B20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_0_N"
-set_property -dict { PACKAGE_PIN B20    IOSTANDARD LVCMOS33 } [get_ports {LED_ext_clock_0_locked}]
+set_property -dict { PACKAGE_PIN B20    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[1]}]
 #NET JX2_LVDS_0_P    LOC = C20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_0_P"
-set_property -dict { PACKAGE_PIN C20    IOSTANDARD LVCMOS33 } [get_ports {LED_clock_locked}]
+set_property -dict { PACKAGE_PIN C20    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[0]}]
 #NET JX2_LVDS_1_N    LOC = A20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_1_N"
-set_property -dict { PACKAGE_PIN A20    IOSTANDARD LVCMOS33 } [get_ports {LED_running}]
+set_property -dict { PACKAGE_PIN A20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[14]}]
 #NET JX2_LVDS_1_P    LOC = B19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_1_P"
-set_property -dict { PACKAGE_PIN B19    IOSTANDARD LVCMOS33 } [get_ports {core_options_LED_0}]
+set_property -dict { PACKAGE_PIN B19    IOSTANDARD LVCMOS33 } [get_ports {output_bus[15]}]
 #NET JX2_LVDS_10_N   LOC = L17 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_10_N"
-set_property -dict { PACKAGE_PIN L17    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[3]}]
+set_property -dict { PACKAGE_PIN L17    IOSTANDARD LVCMOS33 } [get_ports {I2C_0_scl_io}]
 #NET JX2_LVDS_10_P   LOC = L16 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_10_P"
-set_property -dict { PACKAGE_PIN L16    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[1]}]
+set_property -dict { PACKAGE_PIN L16    IOSTANDARD LVCMOS33 } [get_ports {I2C_0_sda_io}]
 #NET JX2_LVDS_11_N   LOC = K18 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_11_N"
-set_property -dict { PACKAGE_PIN K18    IOSTANDARD LVCMOS33 } [get_ports {JX1_LVDS_5_N}]
+set_property -dict { PACKAGE_PIN K18    IOSTANDARD LVCMOS33 } [get_ports {SPI_1_MOSI}]
 #NET JX2_LVDS_11_P   LOC = K17 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_11_P"
-set_property -dict { PACKAGE_PIN K17    IOSTANDARD LVCMOS33 } [get_ports {LED_select_ext_clock_locked}]
+set_property -dict { PACKAGE_PIN K17    IOSTANDARD LVCMOS33 } [get_ports {ext_clock_1}] 
+# should be FPGA_SPI1_Direct}]
 #NET JX2_LVDS_12_N   LOC = H17 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_12_N"
-set_property -dict { PACKAGE_PIN H17    IOSTANDARD LVCMOS33 } [get_ports {I2C_0_scl_io}]
+set_property -dict { PACKAGE_PIN H17    IOSTANDARD LVCMOS33 } [get_ports {output_bus[27]}]
+# should be FPGA_SPI1_SDIO_1}]
 #NET JX2_LVDS_12_P   LOC = H16 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_12_P"
-set_property -dict { PACKAGE_PIN H16    IOSTANDARD LVCMOS33 } [get_ports {I2C_0_sda_io}]
+set_property -dict { PACKAGE_PIN H16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[26]}]
+# should be FPGA_SPI1_SDIO_0}]
 #NET JX2_LVDS_13_N   LOC = H18 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_13_N"
-set_property -dict { PACKAGE_PIN H18    IOSTANDARD LVCMOS33 } [get_ports {I2C_1_scl_io}]
+set_property -dict { PACKAGE_PIN H18    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[2]}]
 #NET JX2_LVDS_13_P   LOC = J18 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_13_P"
-set_property -dict { PACKAGE_PIN J18    IOSTANDARD LVCMOS33 } [get_ports {I2C_1_sda_io}]
+set_property -dict { PACKAGE_PIN J18    IOSTANDARD LVCMOS33 } [get_ports {SPI_1_SCLK}]
 #NET JX2_LVDS_14_N   LOC = G18 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_14_N"
-set_property -dict { PACKAGE_PIN G18    IOSTANDARD LVCMOS33 } [get_ports {I2C_RESET}]
+set_property -dict { PACKAGE_PIN G18    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[0]}]
 #NET JX2_LVDS_14_P   LOC = G17 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_14_P"
-set_property -dict { PACKAGE_PIN G17    IOSTANDARD LVCMOS33 } [get_ports {storing_data}]
+set_property -dict { PACKAGE_PIN G17    IOSTANDARD LVCMOS33 } [get_ports {SPI_select[1]}]
 #NET JX2_LVDS_15_N   LOC = F20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_15_N"
-set_property -dict { PACKAGE_PIN F20    IOSTANDARD LVCMOS33 } [get_ports {interlock}]
+set_property -dict { PACKAGE_PIN F20    IOSTANDARD LVCMOS33 } [get_ports {I2C_RESET[0]}]
+# should be FPGA_SPI1_SDIO_3}]
 #NET JX2_LVDS_15_P   LOC = F19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_15_P"
-set_property -dict { PACKAGE_PIN F19    IOSTANDARD LVCMOS33 } [get_ports {uart_rtl_0_sin}]
+set_property -dict { PACKAGE_PIN F19    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_15_P}]
+#ToDo FPGA_SPI1_SDIO_2}]
 #NET JX2_LVDS_16_N   LOC = G20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_16_N"
-set_property -dict { PACKAGE_PIN G20    IOSTANDARD LVCMOS33 } [get_ports {uart_rtl_0_sout}]
+set_property -dict { PACKAGE_PIN G20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[6]}]
 #NET JX2_LVDS_16_P   LOC = G19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_16_P"
-set_property -dict { PACKAGE_PIN G19    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_16_P}]
+set_property -dict { PACKAGE_PIN G19    IOSTANDARD LVCMOS33 } [get_ports {output_bus[7]}]
 #NET JX2_LVDS_17_N   LOC = H20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_17_N"
-set_property -dict { PACKAGE_PIN H20    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_17_N}]
+set_property -dict { PACKAGE_PIN H20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[17]}]
 #NET JX2_LVDS_17_P   LOC = J20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_17_P"
-set_property -dict { PACKAGE_PIN J20    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_17_P}]
+set_property -dict { PACKAGE_PIN J20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[16]}]
 #NET JX2_LVDS_18_N   LOC = J14 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_18_N"
-set_property -dict { PACKAGE_PIN J14    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_18_N}]
+set_property -dict { PACKAGE_PIN J14    IOSTANDARD LVCMOS33 } [get_ports {output_bus[4]}]
 #NET JX2_LVDS_18_P   LOC = K14 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_18_P"
-set_property -dict { PACKAGE_PIN K14    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_18_P}]
+set_property -dict { PACKAGE_PIN K14    IOSTANDARD LVCMOS33 } [get_ports {output_bus[5]}]
 #NET JX2_LVDS_19_N   LOC = G15 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_19_N"
-set_property -dict { PACKAGE_PIN G15    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_19_N}]
+set_property -dict { PACKAGE_PIN G15    IOSTANDARD LVCMOS33 } [get_ports {output_bus[19]}]
 #NET JX2_LVDS_19_P   LOC = H15 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_19_P"
-set_property -dict { PACKAGE_PIN H15    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_19_P}]
+set_property -dict { PACKAGE_PIN H15    IOSTANDARD LVCMOS33 } [get_ports {output_bus[18]}]
 #NET JX2_LVDS_2_N    LOC = D18 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_2_N"
-set_property -dict { PACKAGE_PIN D18    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_2_N}]
+set_property -dict { PACKAGE_PIN D18    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[3]}]
 #NET JX2_LVDS_2_P    LOC = E17 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_2_P"
-set_property -dict { PACKAGE_PIN E17    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_2_P}]
+set_property -dict { PACKAGE_PIN E17    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[2]}]
 #NET JX2_LVDS_20_N   LOC = N16 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_20_N"
-set_property -dict { PACKAGE_PIN N16    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_20_N}]
+set_property -dict { PACKAGE_PIN N16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[21]}]
 #NET JX2_LVDS_20_P   LOC = N15 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_20_P"
-set_property -dict { PACKAGE_PIN N15    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_20_P}]
+set_property -dict { PACKAGE_PIN N15    IOSTANDARD LVCMOS33 } [get_ports {output_bus[20]}]
 #NET JX2_LVDS_21_N   LOC = L15 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_21_N"
-set_property -dict { PACKAGE_PIN L15    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_21_N}]
+set_property -dict { PACKAGE_PIN L15    IOSTANDARD LVCMOS33 } [get_ports {output_bus[2]}]
 #NET JX2_LVDS_21_P   LOC = L14 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_21_P"
-set_property -dict { PACKAGE_PIN L14    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_21_P}]
+set_property -dict { PACKAGE_PIN L14    IOSTANDARD LVCMOS33 } [get_ports {output_bus[3]}]
 #NET JX2_LVDS_22_N   LOC = M15 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_22_N"
-set_property -dict { PACKAGE_PIN M15    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_22_N}]
+set_property -dict { PACKAGE_PIN M15    IOSTANDARD LVCMOS33 } [get_ports {output_bus[23]}]
 #NET JX2_LVDS_22_P   LOC = M14 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_22_P"
-set_property -dict { PACKAGE_PIN M14    IOSTANDARD LVCMOS33 } [get_ports {JX2_LVDS_22_P}]
+set_property -dict { PACKAGE_PIN M14    IOSTANDARD LVCMOS33 } [get_ports {output_bus[22]}]
 #NET JX2_LVDS_23_N   LOC = J16 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_23_N"
-set_property -dict { PACKAGE_PIN J16    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[0]}]
+set_property -dict { PACKAGE_PIN J16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[0]}]
 #NET JX2_LVDS_23_P   LOC = K16 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_23_P"
-set_property -dict { PACKAGE_PIN K16    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[1]}]
+set_property -dict { PACKAGE_PIN K16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[1]}]
 #NET JX2_LVDS_3_N    LOC = D20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_3_N"
-set_property -dict { PACKAGE_PIN D20    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[2]}]
+set_property -dict { PACKAGE_PIN D20    IOSTANDARD LVCMOS33 } [get_ports {output_bus[12]}]
 #NET JX2_LVDS_3_P    LOC = D19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_3_P"
-set_property -dict { PACKAGE_PIN D19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[3]}]
+set_property -dict { PACKAGE_PIN D19    IOSTANDARD LVCMOS33 } [get_ports {output_bus[13]}]
 #NET JX2_LVDS_4_N    LOC = E19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_4_N"
-set_property -dict { PACKAGE_PIN E19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[4]}]
+set_property -dict { PACKAGE_PIN E19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[5]}]
 #NET JX2_LVDS_4_P    LOC = E18 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_4_P"
-set_property -dict { PACKAGE_PIN E18    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[5]}]
+set_property -dict { PACKAGE_PIN E18    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[4]}]
 #NET JX2_LVDS_5_N    LOC = F17 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_5_N"
-set_property -dict { PACKAGE_PIN F17    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[6]}]
+set_property -dict { PACKAGE_PIN F17    IOSTANDARD LVCMOS33 } [get_ports {output_bus[10]}]
 #NET JX2_LVDS_5_P    LOC = F16 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_5_P"
-set_property -dict { PACKAGE_PIN F16    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[7]}]
+set_property -dict { PACKAGE_PIN F16    IOSTANDARD LVCMOS33 } [get_ports {output_bus[11]}]
 #NET JX2_LVDS_6_N    LOC = L20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_6_N"
-set_property -dict { PACKAGE_PIN L20    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[0]}]
+set_property -dict { PACKAGE_PIN L20    IOSTANDARD LVCMOS33 } [get_ports {ext_condition_0}]
+#should be FPGA_IRQ0}]
 #NET JX2_LVDS_6_P    LOC = L19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_6_P"
-set_property -dict { PACKAGE_PIN L19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[1]}]
+set_property -dict { PACKAGE_PIN L19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_out[3]}] 
+# should be FPGA_SPI0_CS_ENABLE_CONFIG0}]
 #NET JX2_LVDS_7_N    LOC = M20 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_7_N"
-set_property -dict { PACKAGE_PIN M20    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[2]}]
+set_property -dict { PACKAGE_PIN M20    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[7]}]
 #NET JX2_LVDS_7_P    LOC = M19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_7_P"
-set_property -dict { PACKAGE_PIN M19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[3]}]
+set_property -dict { PACKAGE_PIN M19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[6]}]
 #NET JX2_LVDS_8_N    LOC = M18 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_8_N"
-set_property -dict { PACKAGE_PIN M18    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[4]}]
+set_property -dict { PACKAGE_PIN M18    IOSTANDARD LVCMOS33 } [get_ports {output_bus[8]}]
 #NET JX2_LVDS_8_P    LOC = M17 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_8_P"
-set_property -dict { PACKAGE_PIN M17    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[5]}]
+set_property -dict { PACKAGE_PIN M17    IOSTANDARD LVCMOS33 } [get_ports {output_bus[9]}]
 #NET JX2_LVDS_9_N    LOC = J19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_9_N"
-set_property -dict { PACKAGE_PIN J19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[6]}]
+set_property -dict { PACKAGE_PIN J19    IOSTANDARD LVCMOS33 } [get_ports {SPI_1_MISO}]
 #NET JX2_LVDS_9_P    LOC = K19 | IOSTANDARD = LVCMOS18;  # "JX2_LVDS_9_P"
-set_property -dict { PACKAGE_PIN K19    IOSTANDARD LVCMOS33 } [get_ports {core_dig_in[7]}]
+set_property -dict { PACKAGE_PIN K19    IOSTANDARD LVCMOS33 } [get_ports {SPI_READY}] 
+#should be FPGA_RDY_SPI1}]
 #NET JX2_SE_0        LOC = G14 | IOSTANDARD = LVCMOS18;  # "JX2_SE_0"
-set_property -dict { PACKAGE_PIN G14    IOSTANDARD LVCMOS33 } [get_ports {JX2_SE_0}]
+set_property -dict { PACKAGE_PIN G14    IOSTANDARD LVCMOS33 } [get_ports {ext_condition_1}]
 #NET JX2_SE_1        LOC = J15 | IOSTANDARD = LVCMOS18;  # "JX2_SE_1"
-set_property -dict { PACKAGE_PIN J15    IOSTANDARD LVCMOS33 } [get_ports {JX2_SE_1}]
+set_property -dict { PACKAGE_PIN J15    IOSTANDARD LVCMOS33 } [get_ports {uart_rtl_0_sin}]
 
 
 

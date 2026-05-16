@@ -1,5 +1,5 @@
 // (c) Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-// (c) Copyright 2022-2025 Advanced Micro Devices, Inc. All rights reserved.
+// (c) Copyright 2022-2026 Advanced Micro Devices, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of AMD and is protected under U.S. and international copyright
@@ -81,11 +81,15 @@ module design_1_core_wrapper_0_0 (
   latch_current_state,
   bus_clock_or_strobe,
   I2C_SCL,
-  I2C_SDA,
+  I2C_SDA_OUT,
+  I2C_SDA_IN_0,
+  I2C_SDA_IN_1,
   I2C_SELECT_0,
   I2C_SELECT_1,
+  I2C_0_Destination,
   SPI_IN_0,
   SPI_IN_1,
+  SPI_READY,
   SPI_OUT,
   SPI_SCK,
   SPI_SELECT_0,
@@ -145,11 +149,15 @@ input wire condition_PS;
 input wire latch_current_state;
 output wire bus_clock_or_strobe;
 output wire I2C_SCL;
-output wire I2C_SDA;
+output wire I2C_SDA_OUT;
+input wire I2C_SDA_IN_0;
+input wire I2C_SDA_IN_1;
 output wire I2C_SELECT_0;
 output wire I2C_SELECT_1;
+output wire I2C_0_Destination;
 input wire SPI_IN_0;
 input wire SPI_IN_1;
+input wire SPI_READY;
 output wire SPI_OUT;
 output wire SPI_SCK;
 output wire SPI_SELECT_0;
@@ -213,11 +221,15 @@ output wire periodic_trigger_signal;
     .latch_current_state(latch_current_state),
     .bus_clock_or_strobe(bus_clock_or_strobe),
     .I2C_SCL(I2C_SCL),
-    .I2C_SDA(I2C_SDA),
+    .I2C_SDA_OUT(I2C_SDA_OUT),
+    .I2C_SDA_IN_0(I2C_SDA_IN_0),
+    .I2C_SDA_IN_1(I2C_SDA_IN_1),
     .I2C_SELECT_0(I2C_SELECT_0),
     .I2C_SELECT_1(I2C_SELECT_1),
+    .I2C_0_Destination(I2C_0_Destination),
     .SPI_IN_0(SPI_IN_0),
     .SPI_IN_1(SPI_IN_1),
+    .SPI_READY(SPI_READY),
     .SPI_OUT(SPI_OUT),
     .SPI_SCK(SPI_SCK),
     .SPI_SELECT_0(SPI_SELECT_0),

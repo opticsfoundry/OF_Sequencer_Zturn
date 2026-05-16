@@ -171,39 +171,87 @@ void platform_setup_timer(void)
 	/*
 	 * Set for 250 milli seconds timeout.
 	 */
-	TimerLoadValue = XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / 8;
+	TimerLoadValue = XPAR_CPU_CORTEXA9_0_CPU_CLK_FREQ_HZ / (8*128);/// 8;  128 might be too much //ToDo: adjust to make as responsive as needed, but not too fast in order to not waste time on ethernet pulling checks
 
 	XScuTimer_LoadTimer(&TimerInstance, TimerLoadValue);
 	return;
 }
 
-void platform_setup_interrupts(void)
-{
-	Xil_ExceptionInit();
+XScuGic InterruptController;
+//This should be defined in xparameters.h but somehow isn't
+/* Definitions for Fabric interrupts connected to ps7_scugic_0 */
+#define XPAR_FABRIC_AXI_GPIO_4_GPIO_IO_O_INTR 61U
+#define INTC_DEVICE_INT_ID XPAR_SCUGIC_SINGLE_DEVICE_ID
+extern void ExtIrq_Handler(void *InstancePtr);
+static XScuGic_Config *GicConfig;
 
+extern int firefly_control_init(XScuGic *InterruptController);
+
+int platform_setup_interrupts(void)
+{
+	//xil_printf("\r\n");
+
+	//xil_printf("\r\nplatform_setup_interrupts\r\n");
+	// Initialize GIC
+	GicConfig = XScuGic_LookupConfig(INTC_DEVICE_INT_ID);
+	if (NULL == GicConfig) {
+		xil_printf("XScuGic_LookupConfig(%d) failed\r\n",
+				INTC_DEVICE_INT_ID);
+		return XST_FAILURE;
+	}
+
+	//xil_printf("platform_setup_interrupts: XScuGic_CfgInitialize\r\n");
+
+	int Status = XScuGic_CfgInitialize(&InterruptController, GicConfig,
+					   GicConfig->CpuBaseAddress);
+	if (Status != XST_SUCCESS) {
+		xil_printf("XScuGic_CfgInitialize failed\r\n");
+		return XST_FAILURE;
+	}
+
+	//xil_printf("platform_setup_interrupts: Xil_ExceptionInit\r\n");
+	Xil_ExceptionInit();
+	//xil_printf("platform_setup_interrupts: XScuGic_DeviceInitialize\r\n");
 	XScuGic_DeviceInitialize(INTC_DEVICE_ID);
 
 	/*
 	 * Connect the interrupt controller interrupt handler to the hardware
 	 * interrupt handling logic in the processor.
 	 */
+	//xil_printf("platform_setup_interrupts: Xil_ExceptionRegisterHandler\r\n");
 	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT,
-			(Xil_ExceptionHandler)XScuGic_DeviceInterruptHandler,
-			(void *)INTC_DEVICE_ID);
+			(Xil_ExceptionHandler)XScuGic_InterruptHandler,//(Xil_ExceptionHandler)XScuGic_DeviceInterruptHandler,
+			&InterruptController);//(void *)INTC_DEVICE_ID);
+
+	//xil_printf("firefly_control_interrupt_init: XScuGic_Connect 3a\r\n");
+
+	  Status = XScuGic_Connect(&InterruptController,
+			  XPAR_FABRIC_AXI_GPIO_4_GPIO_IO_O_INTR, (Xil_ExceptionHandler)ExtIrq_Handler, (void *)NULL);
+	  if (Status != XST_SUCCESS) {
+		  xil_printf("firefly_control_interrupt_init: XScuGic_Connect failed\r\n");
+		  return XST_FAILURE;
+	  }
+
+	firefly_control_init(&InterruptController);
+
+
 	/*
 	 * Connect the device driver handler that will be called when an
 	 * interrupt for the device occurs, the handler defined above performs
 	 * the specific interrupt processing for the device.
 	 */
+	//xil_printf("platform_setup_interrupts: XScuGic_RegisterHandler\r\n");
 	XScuGic_RegisterHandler(INTC_BASE_ADDR, TIMER_IRPT_INTR,
 					(Xil_ExceptionHandler)timer_callback,
 					(void *)&TimerInstance);
+
 	/*
 	 * Enable the interrupt for scu timer.
 	 */
+	//xil_printf("platform_setup_interrupts: XScuGic_EnableIntr\r\n");
 	XScuGic_EnableIntr(INTC_DIST_BASE_ADDR, TIMER_IRPT_INTR);
 
-	return;
+	return XST_SUCCESS;
 }
 
 void platform_enable_interrupts()
@@ -211,6 +259,7 @@ void platform_enable_interrupts()
 	/*
 	 * Enable non-critical exceptions.
 	 */
+
 	Xil_ExceptionEnableMask(XIL_EXCEPTION_IRQ);
 	XScuTimer_EnableInterrupt(&TimerInstance);
 	XScuTimer_Start(&TimerInstance);

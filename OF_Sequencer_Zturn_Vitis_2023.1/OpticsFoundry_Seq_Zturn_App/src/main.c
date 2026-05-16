@@ -143,7 +143,7 @@ void RunEventLoop() { //make sure other parts of the program regularly (at least
 	}
 	if (TcpSlowTmrFlag) {
 		tcp_slowtmr();
-		if (DebugModeOn) ShowSignOfLife();
+		//if (DebugModeOn) ShowSignOfLife();
 		TcpSlowTmrFlag = 0;
 	}
 	xemacif_input(echo_netif);
@@ -158,7 +158,7 @@ To change MAC address:
 Change mac_ethernet_address, then rebuild as DEBUG and RELEASE, create firmware image, flash.
 */
 unsigned char mac_ethernet_address[] =
-	{ 0x00, 0x0a, 0x35, 0xF1, 0x01, 0x02 };
+	{ 0x00, 0x0a, 0x35, 0xF1, 0x01, 0x03 };
 
 void get_mac_address_as_string(char * buf) {
 	sprintf(buf, "%02X:%02X:%02X:%02X:%02X:%02X\n",mac_ethernet_address[0],mac_ethernet_address[1],mac_ethernet_address[2],mac_ethernet_address[3],mac_ethernet_address[4],mac_ethernet_address[5]);
@@ -275,9 +275,12 @@ The complete list is shown in "MicroZed ethernet lwIP BSP working vs not working
 #warning "Information: Using DHCP, not static IP."
 #else
 	/* initialize IP addresses to be used */
-	IP4_ADDR(&ipaddr,  192, 168,   0, 110);
+	IP4_ADDR(&ipaddr,  192, 168,   1, 10);
 	IP4_ADDR(&netmask, 255, 255, 255,  0);
-	IP4_ADDR(&gw,      192, 168,   0,  1);
+	/* No default gateway for isolation */
+	IP4_ADDR(&gw,      0,   0,   0,  0);
+	//Otherwise, if you want the Zynq to access the internet beyond your local ethernet, specify your gateway, e.g.
+	//IP4_ADDR(&gw,      192, 168,   1,  1);
 #warning "Information: Using static IP, not DHCP."
 #endif
 #endif

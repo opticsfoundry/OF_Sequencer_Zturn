@@ -2,7 +2,7 @@
 #define IP_DESIGN_1_PROCESSING_SYSTEM7_0_0_H_
 
 // (c) Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-// (c) Copyright 2022-2025 Advanced Micro Devices, Inc. All rights reserved.
+// (c) Copyright 2022-2026 Advanced Micro Devices, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of AMD and is protected under U.S. and international copyright
@@ -83,6 +83,18 @@ public:
   sc_core::sc_in< sc_dt::sc_bv<64> > GPIO_I;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_O;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_T;
+  sc_core::sc_in< bool > I2C0_SDA_I;
+  sc_core::sc_out< bool > I2C0_SDA_O;
+  sc_core::sc_out< bool > I2C0_SDA_T;
+  sc_core::sc_in< bool > I2C0_SCL_I;
+  sc_core::sc_out< bool > I2C0_SCL_O;
+  sc_core::sc_out< bool > I2C0_SCL_T;
+  sc_core::sc_in< bool > I2C1_SDA_I;
+  sc_core::sc_out< bool > I2C1_SDA_O;
+  sc_core::sc_out< bool > I2C1_SDA_T;
+  sc_core::sc_in< bool > I2C1_SCL_I;
+  sc_core::sc_out< bool > I2C1_SCL_O;
+  sc_core::sc_out< bool > I2C1_SCL_T;
   sc_core::sc_out< bool > TTC0_WAVE0_OUT;
   sc_core::sc_out< bool > TTC0_WAVE1_OUT;
   sc_core::sc_out< bool > TTC0_WAVE2_OUT;
@@ -248,6 +260,18 @@ public:
   sc_core::sc_in< sc_dt::sc_bv<64> > GPIO_I;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_O;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_T;
+  sc_core::sc_in< bool > I2C0_SDA_I;
+  sc_core::sc_out< bool > I2C0_SDA_O;
+  sc_core::sc_out< bool > I2C0_SDA_T;
+  sc_core::sc_in< bool > I2C0_SCL_I;
+  sc_core::sc_out< bool > I2C0_SCL_O;
+  sc_core::sc_out< bool > I2C0_SCL_T;
+  sc_core::sc_in< bool > I2C1_SDA_I;
+  sc_core::sc_out< bool > I2C1_SDA_O;
+  sc_core::sc_out< bool > I2C1_SDA_T;
+  sc_core::sc_in< bool > I2C1_SCL_I;
+  sc_core::sc_out< bool > I2C1_SCL_O;
+  sc_core::sc_out< bool > I2C1_SCL_T;
   sc_core::sc_out< bool > TTC0_WAVE0_OUT;
   sc_core::sc_out< bool > TTC0_WAVE1_OUT;
   sc_core::sc_out< bool > TTC0_WAVE2_OUT;
@@ -413,6 +437,18 @@ public:
   sc_core::sc_in< sc_dt::sc_bv<64> > GPIO_I;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_O;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_T;
+  sc_core::sc_in< bool > I2C0_SDA_I;
+  sc_core::sc_out< bool > I2C0_SDA_O;
+  sc_core::sc_out< bool > I2C0_SDA_T;
+  sc_core::sc_in< bool > I2C0_SCL_I;
+  sc_core::sc_out< bool > I2C0_SCL_O;
+  sc_core::sc_out< bool > I2C0_SCL_T;
+  sc_core::sc_in< bool > I2C1_SDA_I;
+  sc_core::sc_out< bool > I2C1_SDA_O;
+  sc_core::sc_out< bool > I2C1_SDA_T;
+  sc_core::sc_in< bool > I2C1_SCL_I;
+  sc_core::sc_out< bool > I2C1_SCL_O;
+  sc_core::sc_out< bool > I2C1_SCL_T;
   sc_core::sc_out< bool > TTC0_WAVE0_OUT;
   sc_core::sc_out< bool > TTC0_WAVE1_OUT;
   sc_core::sc_out< bool > TTC0_WAVE2_OUT;
@@ -582,6 +618,18 @@ public:
   sc_core::sc_in< sc_dt::sc_bv<64> > GPIO_I;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_O;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_T;
+  sc_core::sc_in< bool > I2C0_SDA_I;
+  sc_core::sc_out< bool > I2C0_SDA_O;
+  sc_core::sc_out< bool > I2C0_SDA_T;
+  sc_core::sc_in< bool > I2C0_SCL_I;
+  sc_core::sc_out< bool > I2C0_SCL_O;
+  sc_core::sc_out< bool > I2C0_SCL_T;
+  sc_core::sc_in< bool > I2C1_SDA_I;
+  sc_core::sc_out< bool > I2C1_SDA_O;
+  sc_core::sc_out< bool > I2C1_SDA_T;
+  sc_core::sc_in< bool > I2C1_SCL_I;
+  sc_core::sc_out< bool > I2C1_SCL_O;
+  sc_core::sc_out< bool > I2C1_SCL_T;
   sc_core::sc_out< bool > TTC0_WAVE0_OUT;
   sc_core::sc_out< bool > TTC0_WAVE1_OUT;
   sc_core::sc_out< bool > TTC0_WAVE2_OUT;
@@ -759,6 +807,18 @@ public:
   sc_core::sc_in< sc_dt::sc_bv<64> > GPIO_I;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_O;
   sc_core::sc_out< sc_dt::sc_bv<64> > GPIO_T;
+  sc_core::sc_in< bool > I2C0_SDA_I;
+  sc_core::sc_out< bool > I2C0_SDA_O;
+  sc_core::sc_out< bool > I2C0_SDA_T;
+  sc_core::sc_in< bool > I2C0_SCL_I;
+  sc_core::sc_out< bool > I2C0_SCL_O;
+  sc_core::sc_out< bool > I2C0_SCL_T;
+  sc_core::sc_in< bool > I2C1_SDA_I;
+  sc_core::sc_out< bool > I2C1_SDA_O;
+  sc_core::sc_out< bool > I2C1_SDA_T;
+  sc_core::sc_in< bool > I2C1_SCL_I;
+  sc_core::sc_out< bool > I2C1_SCL_O;
+  sc_core::sc_out< bool > I2C1_SCL_T;
   sc_core::sc_out< bool > TTC0_WAVE0_OUT;
   sc_core::sc_out< bool > TTC0_WAVE1_OUT;
   sc_core::sc_out< bool > TTC0_WAVE2_OUT;

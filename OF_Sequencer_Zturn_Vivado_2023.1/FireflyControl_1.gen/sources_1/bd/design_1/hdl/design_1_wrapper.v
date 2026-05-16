@@ -2,7 +2,7 @@
 //Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
-//Date        : Mon Apr 21 19:45:04 2025
+//Date        : Sat May 16 15:54:28 2026
 //Host        : FS_Lenovo_P1 running 64-bit major release  (build 9200)
 //Command     : generate_target design_1_wrapper.bd
 //Design      : design_1_wrapper
@@ -36,6 +36,8 @@ module design_1_wrapper
     I2C_0_scl_o,
     I2C_0_scl_t,
     I2C_0_sda_i,
+    I2C_0_sda_o,
+    I2C_0_sda_t,
     I2C_1_scl_i,
     I2C_1_scl_o,
     I2C_1_scl_t,
@@ -43,8 +45,12 @@ module design_1_wrapper
     I2C_1_sda_o,
     I2C_1_sda_t,
     I2C_RESET,
-    IIC_0_sda_o,
-    IIC_0_sda_t,
+    I2C_zturn_scl_i,
+    I2C_zturn_scl_o,
+    I2C_zturn_scl_t,
+    I2C_zturn_sda_i,
+    I2C_zturn_sda_o,
+    I2C_zturn_sda_t,
     LED_0_BLUE,
     LED_0_GREEN,
     LED_0_RED,
@@ -58,6 +64,7 @@ module design_1_wrapper
     SPI_1_MISO,
     SPI_1_MOSI,
     SPI_1_SCLK,
+    SPI_READY,
     SPI_select,
     clock_or_strobe,
     core_dig_in,
@@ -69,6 +76,7 @@ module design_1_wrapper
     ext_condition_1,
     ext_trigger_0,
     ext_trigger_1,
+    heartbeat,
     interlock,
     output_bus,
     storing_data,
@@ -100,6 +108,8 @@ module design_1_wrapper
   output I2C_0_scl_o;
   output I2C_0_scl_t;
   input I2C_0_sda_i;
+  output I2C_0_sda_o;
+  output I2C_0_sda_t;
   input I2C_1_scl_i;
   output I2C_1_scl_o;
   output I2C_1_scl_t;
@@ -107,8 +117,12 @@ module design_1_wrapper
   output I2C_1_sda_o;
   output I2C_1_sda_t;
   output [0:0]I2C_RESET;
-  output IIC_0_sda_o;
-  output IIC_0_sda_t;
+  input I2C_zturn_scl_i;
+  output I2C_zturn_scl_o;
+  output I2C_zturn_scl_t;
+  input I2C_zturn_sda_i;
+  output I2C_zturn_sda_o;
+  output I2C_zturn_sda_t;
   output [0:0]LED_0_BLUE;
   output [0:0]LED_0_GREEN;
   output [0:0]LED_0_RED;
@@ -122,6 +136,7 @@ module design_1_wrapper
   input SPI_1_MISO;
   output SPI_1_MOSI;
   output SPI_1_SCLK;
+  input SPI_READY;
   output [3:0]SPI_select;
   output clock_or_strobe;
   input [7:0]core_dig_in;
@@ -133,6 +148,7 @@ module design_1_wrapper
   input ext_condition_1;
   input ext_trigger_0;
   input ext_trigger_1;
+  output [0:0]heartbeat;
   input interlock;
   output [27:0]output_bus;
   output storing_data;
@@ -165,6 +181,8 @@ module design_1_wrapper
   wire I2C_0_scl_o;
   wire I2C_0_scl_t;
   wire I2C_0_sda_i;
+  wire I2C_0_sda_o;
+  wire I2C_0_sda_t;
   wire I2C_1_scl_i;
   wire I2C_1_scl_o;
   wire I2C_1_scl_t;
@@ -172,8 +190,12 @@ module design_1_wrapper
   wire I2C_1_sda_o;
   wire I2C_1_sda_t;
   wire [0:0]I2C_RESET;
-  wire IIC_0_sda_o;
-  wire IIC_0_sda_t;
+  wire I2C_zturn_scl_i;
+  wire I2C_zturn_scl_o;
+  wire I2C_zturn_scl_t;
+  wire I2C_zturn_sda_i;
+  wire I2C_zturn_sda_o;
+  wire I2C_zturn_sda_t;
   wire [0:0]LED_0_BLUE;
   wire [0:0]LED_0_GREEN;
   wire [0:0]LED_0_RED;
@@ -187,6 +209,7 @@ module design_1_wrapper
   wire SPI_1_MISO;
   wire SPI_1_MOSI;
   wire SPI_1_SCLK;
+  wire SPI_READY;
   wire [3:0]SPI_select;
   wire clock_or_strobe;
   wire [7:0]core_dig_in;
@@ -198,6 +221,7 @@ module design_1_wrapper
   wire ext_condition_1;
   wire ext_trigger_0;
   wire ext_trigger_1;
+  wire [0:0]heartbeat;
   wire interlock;
   wire [27:0]output_bus;
   wire storing_data;
@@ -231,6 +255,8 @@ module design_1_wrapper
         .I2C_0_scl_o(I2C_0_scl_o),
         .I2C_0_scl_t(I2C_0_scl_t),
         .I2C_0_sda_i(I2C_0_sda_i),
+        .I2C_0_sda_o(I2C_0_sda_o),
+        .I2C_0_sda_t(I2C_0_sda_t),
         .I2C_1_scl_i(I2C_1_scl_i),
         .I2C_1_scl_o(I2C_1_scl_o),
         .I2C_1_scl_t(I2C_1_scl_t),
@@ -238,8 +264,12 @@ module design_1_wrapper
         .I2C_1_sda_o(I2C_1_sda_o),
         .I2C_1_sda_t(I2C_1_sda_t),
         .I2C_RESET(I2C_RESET),
-        .IIC_0_sda_o(IIC_0_sda_o),
-        .IIC_0_sda_t(IIC_0_sda_t),
+        .I2C_zturn_scl_i(I2C_zturn_scl_i),
+        .I2C_zturn_scl_o(I2C_zturn_scl_o),
+        .I2C_zturn_scl_t(I2C_zturn_scl_t),
+        .I2C_zturn_sda_i(I2C_zturn_sda_i),
+        .I2C_zturn_sda_o(I2C_zturn_sda_o),
+        .I2C_zturn_sda_t(I2C_zturn_sda_t),
         .LED_0_BLUE(LED_0_BLUE),
         .LED_0_GREEN(LED_0_GREEN),
         .LED_0_RED(LED_0_RED),
@@ -253,6 +283,7 @@ module design_1_wrapper
         .SPI_1_MISO(SPI_1_MISO),
         .SPI_1_MOSI(SPI_1_MOSI),
         .SPI_1_SCLK(SPI_1_SCLK),
+        .SPI_READY(SPI_READY),
         .SPI_select(SPI_select),
         .clock_or_strobe(clock_or_strobe),
         .core_dig_in(core_dig_in),
@@ -264,6 +295,7 @@ module design_1_wrapper
         .ext_condition_1(ext_condition_1),
         .ext_trigger_0(ext_trigger_0),
         .ext_trigger_1(ext_trigger_1),
+        .heartbeat(heartbeat),
         .interlock(interlock),
         .output_bus(output_bus),
         .storing_data(storing_data),

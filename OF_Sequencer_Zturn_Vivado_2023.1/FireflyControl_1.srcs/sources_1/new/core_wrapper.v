@@ -46,11 +46,15 @@ module core_wrapper(
     latch_current_state,
     bus_clock_or_strobe,
     I2C_SCL,
-    I2C_SDA,
+    I2C_SDA_OUT,
+    I2C_SDA_IN_0,
+    I2C_SDA_IN_1,
     I2C_SELECT_0,
     I2C_SELECT_1,
+    I2C_0_Destination,
     SPI_IN_0,
     SPI_IN_1,
+    SPI_READY,
     SPI_OUT,
     SPI_SCK,
     SPI_SELECT_0,
@@ -108,12 +112,16 @@ input condition_PS;
 input latch_current_state;
 input SPI_IN_0;
 input SPI_IN_1;
+input SPI_READY;
 output SPI_OUT;
 output bus_clock_or_strobe;
 output I2C_SCL;
-output I2C_SDA;
+output I2C_SDA_OUT;
+input I2C_SDA_IN_0;
+input I2C_SDA_IN_1;
 output I2C_SELECT_0;
 output I2C_SELECT_1;
+output I2C_0_Destination;
 output [3:0] SPI_chip_select;
 output SPI_SCK;
 output SPI_SELECT_0;
@@ -169,12 +177,16 @@ core core_inst (
     .latch_current_state(latch_current_state),
     .SPI_IN_0(SPI_IN_0),
     .SPI_IN_1(SPI_IN_1),
+    .SPI_READY(SPI_READY),
     .SPI_OUT(SPI_OUT),
     .bus_clock_or_strobe(bus_clock_or_strobe),
     .I2C_SCL(I2C_SCL),
-    .I2C_SDA(I2C_SDA),
+    .I2C_SDA_OUT(I2C_SDA_OUT),
+    .I2C_SDA_IN_0(I2C_SDA_IN_0),
+    .I2C_SDA_IN_1(I2C_SDA_IN_1),
     .I2C_SELECT_0(I2C_SELECT_0),
     .I2C_SELECT_1(I2C_SELECT_1),
+    .I2C_0_Destination(I2C_0_Destination),
     .SPI_SCK(SPI_SCK),
     .SPI_SELECT_0(SPI_SELECT_0),
     .SPI_SELECT_1(SPI_SELECT_1),

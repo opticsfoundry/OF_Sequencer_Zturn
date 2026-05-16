@@ -55,10 +55,10 @@ module signal_selector_IIC(
     
     // assign output value by referring to logic diagram
     
-    assign port_scl_o = (s & IIC_0_scl_o) | (ns & IIC_1_scl_o);
-    assign port_scl_t = (s & IIC_0_scl_t) | (ns & IIC_1_scl_t);
-    assign port_sda_o = (s & IIC_0_sda_o) | (ns & IIC_1_sda_o);
-    assign port_sda_t = (s & IIC_0_sda_t) | (ns & IIC_1_sda_t);
+    assign port_scl_o = (ns & IIC_0_scl_o) | (s & IIC_1_scl_o);
+    assign port_scl_t = (ns & IIC_0_scl_t) | (s & IIC_1_scl_t);
+    assign port_sda_o = (ns & IIC_0_sda_o) | (s & IIC_1_sda_o);
+    assign port_sda_t = (ns & IIC_0_sda_t) | (s & IIC_1_sda_t);
     
     assign IIC_0_scl_i = port_scl_i;
     assign IIC_1_scl_i = port_scl_i;
