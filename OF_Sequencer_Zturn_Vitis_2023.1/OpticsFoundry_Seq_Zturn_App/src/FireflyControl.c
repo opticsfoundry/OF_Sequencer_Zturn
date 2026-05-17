@@ -1001,13 +1001,6 @@ bool CheckInputMemBufferReadout(bool FinalTransfer) {
 	return TRUE;
 }
 
-void WaitForInputBufferTransferEnd(double timeout_in_sec) { //ToDo: implement timeout
-	if (UseDMAForInputBuffer) {
-		while ((DMA1Done == 0) && (DMA1Error == 0)) {}
-	}
-}
-
-
 
 void SendInputBuffer() {
 	//unsigned
@@ -1649,38 +1642,7 @@ void PrintSequenceStatusRegularly() {
 	}
 }
 
-extern void CheckForPLToPSCommand();
 
-void FireflyControl_wait_till_finished(u32 timeout) { //ToDo: add timeout code
-	u32 LastNextDMA0Transfer = NextDMA0Transfer;
-	LatchCoreStatus();
-	if (DebugModeOn) xil_printf("\r\nWait for sequence to finish\r\n");
-	//if (DebugModeOn) xil_printf("Add %x cycles %x\r\n", ReadCurrentSequenceAddress(), ReadLatchedWaitCycles());
-	while (GetRunning(/*ReadFromLast*/ FALSE)) {
-		LatchCoreStatus();
-		if (timeout>0) {
-			RunEventLoop();
-			CheckInputMemBufferReadout(/* LastTransfer */ FALSE);
-			CheckForPLToPSCommand();
-		}
-		if (DebugModeOn) PrintSequenceStatusRegularly();
-		//sleep(0.5);
-		if (LastNextDMA0Transfer != NextDMA0Transfer){
-			//if (DebugModeOn) xil_printf("\r\nnew transfer detected done %d  error %d\r\n", Done, Error);
-			if (DMA0Done) {
-				LastNextDMA0Transfer = NextDMA0Transfer;
-				//CheckTransferSuccessful(NextDMA0Transfer-1);
-			}
-		}
-
-	}
-	LatchCoreStatus();
-	u32 Input_Mem_Address_in_32_bit_words = ReadInputBufferAddress();
-	if (DebugModeOn) xil_printf("\n\rFinished at add 0x%x = %d cmd %x%x bus %x cyc %x in_mem %d\r\n", ReadLatchedExtendedAddress(), ReadLatchedExtendedAddress(), ReadCurrentSequenceCommand_high(), ReadCurrentSequenceCommand_low(), ReadBus(), ReadLatchedWaitCycles(), Input_Mem_Address_in_32_bit_words);
-	Sequence_running = FALSE;
-	IgnoreTCPIP = FALSE;
-	FireflyControl_print_statistics();
-}
 
 extern void sleep(double);
 
@@ -2211,6 +2173,46 @@ void ProduceHeartBeat() {
 	static u8 heartbeat = FALSE;
 	heartbeat = !heartbeat;
 	SetHeartbeat(heartbeat);
+}
+
+void WaitForInputBufferTransferEnd(double timeout_in_sec) { //ToDo: implement timeout
+	if (UseDMAForInputBuffer) {
+		while ((DMA1Done == 0) && (DMA1Error == 0)) {
+			ProduceHeartBeat();
+		}
+	}
+}
+
+void FireflyControl_wait_till_finished(u32 timeout) { //ToDo: add timeout code
+	u32 LastNextDMA0Transfer = NextDMA0Transfer;
+	LatchCoreStatus();
+	if (DebugModeOn) xil_printf("\r\nWait for sequence to finish\r\n");
+	//if (DebugModeOn) xil_printf("Add %x cycles %x\r\n", ReadCurrentSequenceAddress(), ReadLatchedWaitCycles());
+	while (GetRunning(/*ReadFromLast*/ FALSE)) {
+		LatchCoreStatus();
+		ProduceHeartBeat();
+		if (timeout>0) {
+			RunEventLoop();
+			CheckInputMemBufferReadout(/* LastTransfer */ FALSE);
+			CheckForPLToPSCommand();
+		}
+		if (DebugModeOn) PrintSequenceStatusRegularly();
+		//sleep(0.5);
+		if (LastNextDMA0Transfer != NextDMA0Transfer){
+			//if (DebugModeOn) xil_printf("\r\nnew transfer detected done %d  error %d\r\n", Done, Error);
+			if (DMA0Done) {
+				LastNextDMA0Transfer = NextDMA0Transfer;
+				//CheckTransferSuccessful(NextDMA0Transfer-1);
+			}
+		}
+
+	}
+	LatchCoreStatus();
+	u32 Input_Mem_Address_in_32_bit_words = ReadInputBufferAddress();
+	if (DebugModeOn) xil_printf("\n\rFinished at add 0x%x = %d cmd %x%x bus %x cyc %x in_mem %d\r\n", ReadLatchedExtendedAddress(), ReadLatchedExtendedAddress(), ReadCurrentSequenceCommand_high(), ReadCurrentSequenceCommand_low(), ReadBus(), ReadLatchedWaitCycles(), Input_Mem_Address_in_32_bit_words);
+	Sequence_running = FALSE;
+	IgnoreTCPIP = FALSE;
+	FireflyControl_print_statistics();
 }
 
 void FireflyControlLoop() {

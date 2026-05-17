@@ -25,3 +25,10 @@ timestamp=[2026-05-16 18:42:36], mode=BUILD, duration=0:00:00.121, duration_ms=1
 timestamp=[2026-05-16 18:42:41], mode=BUILD, duration=0:00:05.328, duration_ms=5328, data={name=OpticsFoundry_Seq_Zturn_App, configuration=Debug, clean_build=false}
 timestamp=[2026-05-16 18:42:46], mode=BUILD, duration=0:00:00.417, duration_ms=417, data={name=OpticsFoundry_Seq_Zturn_App, configuration=Debug, clean_build=false}
 timestamp=[2026-05-16 18:42:51], mode=BUILD, duration=0:00:04.771, duration_ms=4771, data={name=OpticsFoundry_Seq_Zturn_App_system, configuration=Debug, clean_build=false}
+timestamp=[2026-05-17 13:32:39], mode=WORKBENCH_START, duration=0:00:07.692, duration_ms=7692, data={}
+timestamp=[2026-05-17 13:32:40], mode=PLATFORM_REPOSITORY_INIT, duration=0:00:00.110, duration_ms=110, data={}
+timestamp=[2026-05-17 13:32:40], mode=WORKBENCH_UI_INIT, duration=0:00:00.849, duration_ms=849, data={editors_count=3, platform_editors_count=0, projects_count=4, platform_projects_count=1, active_platform_editor=false, projects=OpticsFoundry_Seq_Zturn_App,OpticsFoundry_Seq_Zturn_App_system,OpticsFoundry_Seq_Zturn_Platform,RemoteSystemsTempFiles}
+timestamp=[2026-05-17 13:35:53], mode=BUILD, duration=0:00:09.979, duration_ms=9979, data={name=OpticsFoundry_Seq_Zturn_App, configuration=Debug, clean_build=false}
+timestamp=[2026-05-17 13:37:09], mode=BUILD, duration=0:00:02.785, duration_ms=2785, data={name=OpticsFoundry_Seq_Zturn_App, configuration=Debug, clean_build=false}
+timestamp=[2026-05-17 13:37:20], mode=BUILD, duration=0:00:01.135, duration_ms=1135, data={name=OpticsFoundry_Seq_Zturn_App, configuration=Debug, clean_build=false}
+timestamp=[2026-05-17 13:37:34], mode=BUILD, duration=0:00:12.939, duration_ms=12939, data={name=OpticsFoundry_Seq_Zturn_App_system, configuration=Debug, clean_build=false}
