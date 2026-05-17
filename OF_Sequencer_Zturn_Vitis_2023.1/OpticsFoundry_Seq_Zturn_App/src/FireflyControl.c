@@ -1632,7 +1632,7 @@ void print_sequence_status() {
 void PrintSequenceStatusRegularly() {
 	XTime tNow;
 	XTime_GetTime(&tNow);
-	long double sequence_run_time_in_seconds = (long double)((tNow - tSequenceStart) *2)/(long double)XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ;
+	long double sequence_run_time_in_seconds = (long double)((tNow - tSequenceStart) *2)/(long double)COUNTS_PER_SECOND;//XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ;
 	//float c = COUNTS_PER_SECOND;
 	//wait_time_in_seconds = 1.0 * (tEnd - tStart);
 	//wait_time_in_seconds /= c;
@@ -2175,23 +2175,43 @@ void ProduceHeartBeat() {
 	SetHeartbeat(heartbeat);
 }
 
-void WaitForInputBufferTransferEnd(double timeout_in_sec) { //ToDo: implement timeout
-	if (UseDMAForInputBuffer) {
-		while ((DMA1Done == 0) && (DMA1Error == 0)) {
-			ProduceHeartBeat();
-		}
-	}
+static double FireflyControl_elapsed_seconds(XTime tStart)
+{
+	XTime tNow;
+	XTime_GetTime(&tNow);
+	return (double)(((long double)(tNow - tStart)) / ((long double)COUNTS_PER_SECOND)); //XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ
 }
 
-void FireflyControl_wait_till_finished(u32 timeout) { //ToDo: add timeout code
+bool WaitForInputBufferTransferEnd(double timeout_in_sec) {
+	if (DebugModeOn) xil_printf("\r\nWait for input buffer transfer end with timeout %f s\r\n",timeout_in_sec);
+	if (UseDMAForInputBuffer) {
+		XTime tStart;
+		XTime_GetTime(&tStart);
+		while ((DMA1Done == 0) && (DMA1Error == 0)) {
+			ProduceHeartBeat();
+			if (timeout_in_sec>0.001) {
+				if (FireflyControl_elapsed_seconds(tStart) >= timeout_in_sec) {
+					DMA1Error = 1;
+					if (DebugModeOn) xil_printf("\r\nWaitForInputBufferTransferEnd timed out after %f s\r\n", timeout_in_sec);
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool FireflyControl_wait_till_finished(double timeout_in_sec) {
 	u32 LastNextDMA0Transfer = NextDMA0Transfer;
+	XTime tStart;
+	XTime_GetTime(&tStart);
 	LatchCoreStatus();
-	if (DebugModeOn) xil_printf("\r\nWait for sequence to finish\r\n");
+	if (DebugModeOn) xil_printf("\r\nWait for sequence to finish with timeout %f s\r\n",timeout_in_sec);
 	//if (DebugModeOn) xil_printf("Add %x cycles %x\r\n", ReadCurrentSequenceAddress(), ReadLatchedWaitCycles());
 	while (GetRunning(/*ReadFromLast*/ FALSE)) {
 		LatchCoreStatus();
 		ProduceHeartBeat();
-		if (timeout>0) {
+		if (timeout_in_sec > 0.001) {
 			RunEventLoop();
 			CheckInputMemBufferReadout(/* LastTransfer */ FALSE);
 			CheckForPLToPSCommand();
@@ -2205,7 +2225,14 @@ void FireflyControl_wait_till_finished(u32 timeout) { //ToDo: add timeout code
 				//CheckTransferSuccessful(NextDMA0Transfer-1);
 			}
 		}
-
+		if (timeout_in_sec > 0.001) {
+			if (FireflyControl_elapsed_seconds(tStart) >= timeout_in_sec) {
+				if (DebugModeOn) xil_printf("\r\nFireflyControl_wait_till_finished timed out after %f s\r\n",timeout_in_sec);
+				StopSequenceOnError(11);
+				FireflyControl_print_statistics();
+				return false;
+			}
+		}
 	}
 	LatchCoreStatus();
 	u32 Input_Mem_Address_in_32_bit_words = ReadInputBufferAddress();
@@ -2213,6 +2240,7 @@ void FireflyControl_wait_till_finished(u32 timeout) { //ToDo: add timeout code
 	Sequence_running = FALSE;
 	IgnoreTCPIP = FALSE;
 	FireflyControl_print_statistics();
+	return true;
 }
 
 void FireflyControlLoop() {
@@ -2345,7 +2373,9 @@ void FireflyControlLoop() {
 		}else if (strcmp(command,"get_periodic_trigger_error") == 0) {
 			server_send_ascii((GetWarningMissedPeriodicTrigger()) ? "1\n" : "0\n");
 		} else if (strcmp(command,"wait_till_finished") == 0) {
-			FireflyControl_wait_till_finished(/*timeout*/100);
+			double timeout = server_read_double();
+			bool success = FireflyControl_wait_till_finished(timeout);
+			server_send_ascii((success) ? "1\n" : "0\n"); //send 0 if timed out
 		} else if (strcmp(command,"get_current_waveform_point") == 0) {
 			FireflyControl_get_current_waveform_point();
 		} else if (strcmp(command,"get_sequence_number") == 0) {
@@ -2359,13 +2389,17 @@ void FireflyControlLoop() {
 		} else if (strcmp(command,"switch_debug_mode_off") == 0) {
 			DebugModeOn = FALSE;
 		} else if (strcmp(command,"wait_till_end_of_sequence_then_get_input_data") == 0) {
-			FireflyControl_wait_till_finished(/*timeout*/100);
+			double sequence_timeout = server_read_double();
+			double input_timeout = server_read_double();
+			bool success = FireflyControl_wait_till_finished(sequence_timeout);
+			server_send_ascii((success) ? "1\n" : "0\n"); //send 0 if timed out
 			if (DebugModeOn) xil_printf("Checking input buffer\n\r");
 			CheckInputMemBufferReadout(/* LastTransfer */ TRUE);
 			if (DebugModeOn) xil_printf("sending missed period trigger warning\n\r");
 			server_send_ascii((GetWarningMissedPeriodicTrigger()) ? "1\n" : "0\n");
 			if (DebugModeOn) xil_printf("Waiting for input buffer transfer end\n\r");
-			WaitForInputBufferTransferEnd(1);
+			success = WaitForInputBufferTransferEnd(input_timeout);
+			server_send_ascii((success) ? "1\n" : "0\n"); //send 0 if timed out
 			if (DebugModeOn) xil_printf("Sending input buffer\n\r");
 			SendInputBuffer();
 			if (DebugModeOn) xil_printf("Input buffer sent\n\r");

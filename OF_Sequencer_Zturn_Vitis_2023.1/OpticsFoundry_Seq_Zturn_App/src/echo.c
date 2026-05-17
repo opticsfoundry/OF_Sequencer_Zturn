@@ -159,6 +159,15 @@ u8_t server_read_u8() {
 	return atoi((char*)u8_as_string);
 }
 
+double server_read_double() {
+	unsigned char *double_as_string = server_get_command(/*timeout*/10.0);
+	if (double_as_string == NULL) {
+		if (DebugModeOn) xil_printf("server_read_double : no data received\r\n");
+		return 0;
+	}
+	return atof((char*)double_as_string);
+}
+
 /*unsigned char *server_get_command(int timeout) {
 	if (NumberCommandsInBuffer == 0) {
 		if (timeout>0){
