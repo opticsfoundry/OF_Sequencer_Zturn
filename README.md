@@ -54,7 +54,7 @@ After powering on the Z-turn and the JTAG programmer, select "Explorer" -> "Prog
 Use [OpticsFoundry_ControlLight](https://github.com/opticsfoundry/OpticsFoundry_ControlLight) to test the sequencer.
 
 Photo 1: Programming the Z-turn V2; pay attention to put JP2 to Open before powering up the board and to the programming cable orientation.
-![Programming the Z-turn V2](Photos/using_Z-turn_V2.jpeg)
+![Programming the Z-turn V2](Photos/programming_Z-turn_V2.jpeg)
 
 Photo 2: Using the Z-turn V2; pay attention to setting JP2 to Closed.
 ![Using the Z-turn V2](Photos/using_Z-turn_V2.jpeg)
