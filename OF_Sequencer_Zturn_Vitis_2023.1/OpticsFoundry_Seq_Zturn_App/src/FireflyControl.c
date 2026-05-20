@@ -23,6 +23,7 @@
 
 #include "echo.h"
 #include "main.h"
+#include <math.h>
 
 #include "OpticsFoundryCPUCommandSequencer/CPUCommandSequencer.h"
 
@@ -2169,17 +2170,22 @@ void CheckForPLToPSCommand(){
 	}
 }
 
-void ProduceHeartBeat() {
-	static u8 heartbeat = FALSE;
-	heartbeat = !heartbeat;
-	SetHeartbeat(heartbeat);
-}
-
 static double FireflyControl_elapsed_seconds(XTime tStart)
 {
 	XTime tNow;
 	XTime_GetTime(&tNow);
 	return (double)(((long double)(tNow - tStart)) / ((long double)COUNTS_PER_SECOND)); //XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ
+}
+
+
+void ProduceHeartBeat() {
+	static u8 heartbeat = FALSE;
+	static XTime tLastHeartbeat = 0;
+	if (fabs(FireflyControl_elapsed_seconds(tLastHeartbeat)) > 0.1) { //5Hz heartbeat
+		XTime_GetTime(&tLastHeartbeat);
+		heartbeat = !heartbeat;
+		SetHeartbeat(heartbeat);
+	}
 }
 
 bool WaitForInputBufferTransferEnd(double timeout_in_sec) {

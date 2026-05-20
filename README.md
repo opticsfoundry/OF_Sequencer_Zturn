@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The OpticsFoundry control system uses a Zynq 7020 based System on Module to create commands sent over parallel, SPI, and I2C bus to analog and digital in/outputs and direct digital synthesizers (AD9854, AD9858, AD9958). This repository contains the Vivado and Vitis projects needed to recreate the OpticsFoundry sequencer firmware for the Z-turn Board V2. [MicroZed 7020](https://github.com/opticsfoundry/OpticsFoundry_Sequencer_MZ) and [PYNQ Z2](https://github.com/opticsfoundry/OF_Sequencer_PYNQ) versions are also available.
+The OpticsFoundry control system uses a Zynq 7020 based System on Module to create commands sent over parallel, SPI, and I2C bus to analog and digital in/outputs and direct digital synthesizers (AD9854, AD9858, AD9958). This repository contains the Vivado and Vitis projects needed to recreate the OpticsFoundry sequencer firmware for the Z-turn Board V2. [MicroZed 7020](https://github.com/opticsfoundry/OpticsFoundry_Sequencer_MZ) and [PYNQ Z2](https://github.com/opticsfoundry/OF_Sequencer_PYNQ) versions are also available. See [OpticsFoundry_ControlLight](https://github.com/opticsfoundry/OpticsFoundry_ControlLight) for the API and demo code, and [OpticsFoundry_Control](https://github.com/opticsfoundry/OpticsFoundry_Control) for a full fledged experiment control system, including GUI.
 
 This project was inspired by [JQI AutomatioN for Experiments (JANE)](https://github.com/JQIamo/jane), see alse [Rev. Sci. Instrum. 92, 055107 (2021)](https://pubs.aip.org/aip/rsi/article-abstract/92/5/055107/1021868/Programmable-system-on-chip-for-controlling-an).
 
@@ -47,10 +47,17 @@ Right click on "Assistant" OpticsFoundry_Seq_Zturn_App -> Release and select it.
 
 Right click on projects in "Explorer" and select "Build all", or just "Build", then "Create Boot Image".
 
-Connect JTAG cable to the Z-turn Board V2 (e.g. the Digilent JTAG-HS2 + adapter cable), select "Explorer" -> "Program Flash"
+Connect JTAG cable to the Z-turn Board V2 (e.g. the Digilent JTAG-HS2 + adapter cable or board). If you use the adapter cable delivered with your control system: the side with the cable marked in red points towards the edge of the Z-turn board and goes into the VDD pin of the Digilent JTAG-HS2. To enter JTAG programming mode, you need to set JP1 of the Z-turn board to Closed and JP2 to Open before connecting the board to power, see Photo 1 below. 
 
-Use OpticsFoundry_Control_OpticsFoundry or OpticsFoundry_ControlLight to test the sequencer.
+After powering on the Z-turn and the JTAG programmer, select "Explorer" -> "Program Flash". If the JTAG cable is not detected, you might have to download the lated Digilent driver. After you finish programming, you need to set both jumpers to Closed, see Photo 2 below.
 
+Use [OpticsFoundry_ControlLight](https://github.com/opticsfoundry/OpticsFoundry_ControlLight) to test the sequencer.
+
+Photo 1: Programming the Z-turn V2; pay attention to put JP2 to Open before powering up the board and to the programming cable orientation.
+![Programming the Z-turn V2](Photos/using_Z-turn_V2.jpeg)
+
+Photo 2: Using the Z-turn V2; pay attention to setting JP2 to Closed.
+![Using the Z-turn V2](Photos/using_Z-turn_V2.jpeg)
 
 ## Modifying the C code of the Z-turn V2 firmware
 
