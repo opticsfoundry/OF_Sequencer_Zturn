@@ -755,6 +755,7 @@ bool LastDMA1Transfer = 1;
 
 void StopSequenceOnError(u8 error_number) {
 	PauseSequence();
+    ResetCore();
 	Sequence_ended_in_error = TRUE;
 	Sequence_running = FALSE;
 	IgnoreTCPIP = FALSE;

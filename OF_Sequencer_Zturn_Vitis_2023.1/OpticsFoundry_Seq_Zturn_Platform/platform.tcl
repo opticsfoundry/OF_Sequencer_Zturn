@@ -38,3 +38,8 @@ platform config -updatehw {C:/OpticsFoundry/OF_Sequencer_Zturn/OF_Sequencer_Ztur
 platform clean
 platform clean
 platform generate
+platform active {OpticsFoundry_Seq_Zturn_Platform}
+platform config -updatehw {C:/OpticsFoundry/OF_Sequencer_Zturn/OF_Sequencer_Zturn_Vivado_2023.1/design_1_wrapper.xsa}
+platform clean
+platform clean
+platform generate

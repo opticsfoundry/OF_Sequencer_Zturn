@@ -169,10 +169,16 @@ reg [12:0] address_extension = 0;
 reg [47:0] wait_cycles = 0;
 reg bus_clock = 0;
 reg bus_strobe = 0;
+reg bus_strobe_first_part = 0;
+reg bus_strobe_second_part = 1;
+reg bus_data15_used_as_strobe = 0;
+reg bus_data15_second_part = 0;
+reg bus_strobe_idle_part = 0;
+reg bus_data15_idle_part = 0;
 reg [3:0] strobe_choice = 0; 
 reg [7:0] strobe_delay = 0; 
-reg [7:0] strobe_low_length = 0; 
-reg [7:0] strobe_high_length = 0; 
+reg [7:0] strobe_first_part_length = 0; 
+reg [7:0] strobe_second_part_length = 0; 
 reg [117:0] register = 0;
 reg [63:0] command_buffer = 0;
 reg [63:0] extended_command = 0;
@@ -328,6 +334,12 @@ reg SPI_READY_sync = 0;
 (* ASYNC_REG = "TRUE" *) reg condition_1_sync = 0;
 (* ASYNC_REG = "TRUE" *) reg condition_PS_meta = 0;
 (* ASYNC_REG = "TRUE" *) reg condition_PS_sync = 0;
+(* ASYNC_REG = "TRUE" *) reg trigger_0_meta = 0;
+(* ASYNC_REG = "TRUE" *) reg trigger_0_sync = 0;
+(* ASYNC_REG = "TRUE" *) reg trigger_1_meta = 0;
+(* ASYNC_REG = "TRUE" *) reg trigger_1_sync = 0;
+(* ASYNC_REG = "TRUE" *) reg trigger_PS_meta = 0;
+(* ASYNC_REG = "TRUE" *) reg trigger_PS_sync = 0;
 (* ASYNC_REG = "TRUE" *) reg [7:0] core_dig_in_meta = 0;
 (* ASYNC_REG = "TRUE" *) reg [7:0] core_dig_in_sync = 0;
 reg SPI_CPOL = 0;
@@ -462,7 +474,8 @@ typedef enum logic [4:0] {  CMD_STOP, //0
                             CMD_LOAD_COMMAND_BUFFER, //26
                             CMD_SAVE_CYCLE_COUNT_SINCE_STARTUP_IN_INPUT_BUF_MEM, //27
                             CMD_CALC_AD9854_FREQUENCY_TUNING_WORD, //28
-                            CMD_LOAD_EXTENDED_COMMAND //29
+                            CMD_LOAD_EXTENDED_COMMAND, //29
+                            CMD_STEP_SPI //30
                              } type_command; //up to 31 commands
 
 //extended commands contain CMD_LOAD_EXTENDED_COMMAND in bits [4:0] and
@@ -585,7 +598,7 @@ begin
   end
 end
 
-//synchronize external, asynchronous condition and digital input signals to clock
+//synchronize external, asynchronous condition, trigger and digital input signals to clock
 always @(posedge clock, posedge reset)
 begin
   if (reset) begin
@@ -595,6 +608,12 @@ begin
       condition_1_sync <= 0;
       condition_PS_meta <= 0;
       condition_PS_sync <= 0;
+      trigger_0_meta <= 0;
+      trigger_0_sync <= 0;
+      trigger_1_meta <= 0;
+      trigger_1_sync <= 0;
+      trigger_PS_meta <= 0;
+      trigger_PS_sync <= 0;
       core_dig_in_meta <= 0;
       core_dig_in_sync <= 0;
   end else begin
@@ -604,6 +623,12 @@ begin
       condition_1_sync <= condition_1_meta;
       condition_PS_meta <= condition_PS;
       condition_PS_sync <= condition_PS_meta;
+      trigger_0_meta <= trigger_0;
+      trigger_0_sync <= trigger_0_meta;
+      trigger_1_meta <= trigger_1;
+      trigger_1_sync <= trigger_1_meta;
+      trigger_PS_meta <= trigger_PS;
+      trigger_PS_sync <= trigger_PS_meta;
       core_dig_in_meta <= core_dig_in;
       core_dig_in_sync <= core_dig_in_meta;
   end
@@ -711,8 +736,16 @@ begin
         options <= 0;
         strobe_choice <= 0; 
         strobe_delay <= 0; 
-        strobe_low_length <= 0;
-        strobe_high_length <= 0; 
+        strobe_first_part_length <= 0;
+        strobe_second_part_length <= 0; 
+        bus_clock <= 0;
+        bus_strobe <= 0;
+        bus_strobe_first_part <= 0;
+        bus_strobe_second_part <= 1;
+        bus_data15_used_as_strobe <= 0;
+        bus_data15_second_part <= 0;
+        bus_strobe_idle_part <= 0;
+        bus_data15_idle_part <= 0;
         clock_cycles_this_run <= 0;
         loop_count <= 0;
         fast_mode <= 0;
@@ -862,7 +895,8 @@ begin
                             address <= address + 1;
                         end
                     end
-                    if (bus_clock) bus_clock <= 0; else bus_clock <= 1;                   
+                    if (bus_clock) bus_clock <= 0; else bus_clock <= 1;     
+                    bus_data15_used_as_strobe <= 0;              
                     strobe_generator_state <= DELAY_CYCLE;                  
                 end else 
                 
@@ -933,8 +967,35 @@ begin
                                 bus_data <= command[63:36];
                             end  
 `else
-                            bus_data <= command[63:36]; 
-`endif                                
+                            bus_data <= command[63:36];
+`endif                      
+                            bus_data15_used_as_strobe <= 0;
+                            if (bus_clock) bus_clock <= 0; else bus_clock <= 1;                   
+                            strobe_generator_state <= DELAY_CYCLE;   
+                            address <= address + 1; 
+                        end
+                        CMD_STEP_SPI:begin
+                            wait_time[30:0] <= command[30:5];
+                            wait_time[47:31] <= 0;
+                            bus_data <= command[63:36];
+                            //the following settings are only used if bus_data15_used_as_strobe == 1
+                            //bus_data[15] can be used as strobe, if transparent latches are used and bus_strobe == 1 
+                            //with the following settings, we can smoothly switch between normal strobe generation mode and 
+                            //having bus_strobe permanently 1 and generating the strobe on bus_data[15]
+
+                            //bus_data15_used_as_strobe can be used to safe the CPU that prepares the sequence work, 
+                            //as it doesn't need to copy bus_data[15] data and strobe data into the higher command bits if 
+                            // bus_data15_used_as_strobe ==0, i.e. in the many cases in which 
+                            //the normal strobe is used and bus_data[15] is not used as strobe                            
+                            bus_data15_used_as_strobe <= 1;  
+                            //bus_data[15] at beginning of strobe is set already, no need to store
+                            bus_data15_second_part <= command[31:31];  
+                            bus_data15_idle_part <= command[32:32];
+                            //the following settings are required to enable smooth switching between normal strobe mode and strobe on bus_data[15] with bus_strobe = 1
+                            bus_strobe_first_part <= command[33:33];
+                            bus_strobe_second_part <= command[34:34];
+                            bus_strobe_idle_part <= command[35:35];
+
                             if (bus_clock) bus_clock <= 0; else bus_clock <= 1;                   
                             strobe_generator_state <= DELAY_CYCLE;   
                             address <= address + 1; 
@@ -943,7 +1004,8 @@ begin
                             wait_time[30:0] <= command[35:5];
                             wait_time[47:31] <= 0;
                             bus_data <= command[63:36];     
-                            if (bus_clock) bus_clock <= 0; else bus_clock <= 1;                   
+                            if (bus_clock) bus_clock <= 0; else bus_clock <= 1;   
+                            bus_data15_used_as_strobe <= 0;                
                             strobe_generator_state <= DELAY_CYCLE;    
                             fast_mode <= 1;
                             fast_mode_step <= 0;
@@ -965,8 +1027,8 @@ begin
                         end
                         CMD_SET_STROBE_OPTIONS: begin
                             strobe_choice <= command_buffer[11:8]; // 3 bit
-                            strobe_low_length <= command_buffer[23:16]; // 8 bit
-                            strobe_high_length <= command_buffer[31:24]; // 8 bit
+                            strobe_first_part_length <= command_buffer[23:16]; // 8 bit
+                            strobe_second_part_length <= command_buffer[31:24]; // 8 bit
                             address <= address + 1;
                             wait_time <= 1;
                         end
@@ -995,7 +1057,7 @@ begin
                         
                         
                         CMD_WAIT_FOR_TRIGGER: begin
-                            if ((trigger_0 && (command_buffer[8:8] == 1)) || (trigger_1 && (command_buffer[9:9] == 1)) || (trigger_PS && (command_buffer[10:10] == 1))) address <= address + 1;
+                            if ((trigger_0_sync && (command_buffer[8:8] == 1)) || (trigger_1_sync && (command_buffer[9:9] == 1)) || (trigger_PS_sync && (command_buffer[10:10] == 1))) address <= address + 1;
                             wait_time <= 1;
                         end
                         
@@ -1053,7 +1115,8 @@ begin
                             INPUT_REPEAT_trigger_secondary_interrupt_when_finished <= command_buffer[56:56];
                             INPUT_REPEAT_state <= INPUT_REPEAT_START;
                             INPUT_REPEAT_command <= input_repeat_command_t'(command_buffer[59:57]);
-                            if (bus_clock) bus_clock <= 0; else bus_clock <= 1;                                          
+                            if (bus_clock) bus_clock <= 0; else bus_clock <= 1;      
+                            bus_data15_used_as_strobe <= 0;                                    
                             strobe_generator_state <= DELAY_CYCLE;    
                             address <= address + 1;   
                             wait_time <= 1;               
@@ -1243,26 +1306,44 @@ begin
                    
             case (strobe_generator_state)
                 STROBE_GEN_IDLE: begin
-                        bus_strobe <= 0;
+                        if (bus_data15_used_as_strobe) begin
+                            
+                        end else begin
+                            bus_strobe <= 0;
+                        end
                         strobe_delay <= 0;
                     end
                 DELAY_CYCLE: begin
-                    if (strobe_delay < strobe_low_length) begin                
+                    if (strobe_delay < strobe_first_part_length) begin                
                         strobe_delay <= strobe_delay + 1;
-                        bus_strobe <= 0;
+                        if (bus_data15_used_as_strobe) begin
+                            bus_strobe <= bus_strobe_first_part;
+                        end else begin
+                            bus_strobe <= 0;
+                        end
                     end else begin
                         strobe_delay <= 0;
-                        bus_strobe <= 1;                
+                        if (bus_data15_used_as_strobe) begin
+                            bus_strobe <= bus_strobe_second_part;
+                            bus_data[15] <= bus_data15_second_part;
+                        end else begin
+                            bus_strobe <= 1;
+                        end                                     
                         strobe_generator_state <= PULSE_CYCLE;
                     end
                 end
                 PULSE_CYCLE: begin
-                    if (strobe_delay < strobe_high_length) begin                
+                    if (strobe_delay < strobe_second_part_length) begin                
                         strobe_delay <= strobe_delay + 1;
-                        bus_strobe <= 1;
+                        //bus_strobe <= 1;
                     end else begin
-                        strobe_delay <= 0;
-                        bus_strobe <= 0;
+                        strobe_delay <= 0;                        
+                        if (bus_data15_used_as_strobe) begin
+                            bus_strobe <= bus_strobe_idle_part;
+                            bus_data[15] <= bus_data15_idle_part;
+                        end else begin
+                            bus_strobe <= 0;
+                        end
                         strobe_generator_state <= STROBE_GEN_IDLE;
                     end
                 end
